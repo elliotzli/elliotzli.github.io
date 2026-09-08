@@ -1,702 +1,676 @@
 <!DOCTYPE html>
 <!--
   ============================================================
-  ELLIOT LI — PERSONAL WEBSITE
+  ELLIOT LI — PERSONAL SITE  ( nothing-inspired restyle )
   ============================================================
-  This is a single-file website. Everything lives here:
-    - The <head> section  = setup (title, fonts, settings)
-    - The <style> section = all the visual design (CSS)
-    - The <body> section  = the actual content you see (HTML)
+  This is an ALTERNATE design. Your original index.html is
+  untouched. To make this the live site, rename this file to
+  index.html (and rename the old one to index-old.html first,
+  so you can always go back).
 
-  TO EDIT: open this file in any text editor, change the words
-  between the tags, save, then upload to GitHub.
+  WHAT MAKES THIS LOOK THE WAY IT DOES — four rules:
+    1. Only three colours: black, off-white, and one red.
+       Red is used maybe five times on the whole page. That
+       restraint is the entire trick. Adding a fourth colour
+       breaks it.
+    2. A dot-matrix display face for headings only. Everything
+       else is a plain grotesque. Two voices, no more.
+    3. Names written lowercase in spaced brackets:
+       elliot ( li ),  about ( 001 ).
+    4. Hairline rules and a LOT of empty space.
 
-  Files this page expects in the SAME folder:
-    stamp.png       (your seal — top left, footer, browser tab)
-    lighthouse.jpg  (the wide photo band)
-    resume.pdf      (the download button — optional)
+  Files this page expects:
+    pics/stamp.png
+    pics/Resume_2026_Li_Zhengze.pdf
   ============================================================
 -->
 <html lang="en">
 <head>
 
-<!-- Character encoding. Required for Chinese characters to display. Never remove. -->
 <meta charset="UTF-8">
-
-<!-- THIS LINE IS WHAT MAKES THE SITE WORK ON PHONES.
-     It tells a phone: "use your real screen width, don't pretend to be a desktop."
-     Without it, phones zoom out and everything looks tiny. -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<!-- Text shown in the browser tab and in Google search results -->
-<title>Elliot Li's Personal Website</title>
-
-<!-- The gray description line under your link in Google results.
-     Worth keeping: without it, Google invents its own summary from
-     random page text. Edit the wording to whatever you prefer. -->
-<meta name="description" content="Elliot Li — Systems and Data Analyst at Georgetown Law. Projects in data workflows, time series analysis, and quantitative research.">
-
-<!-- The little icon in the browser tab. Uses your stamp. -->
+<title>elliot ( li ) — 李正赜</title>
+<meta name="description" content="Elliot Li 李正赜 — data workflows, quantitative research, and things made outside of work.">
 <link rel="icon" href="pics/stamp.png">
 
-<!-- Loads fonts from Google. The three families are named in the URL:
-     Source Serif 4 (headlines), Inter (body text), IBM Plex Mono (small data labels).
-     To swap a font, change the name here AND in the --serif/--sans/--mono lines below. -->
+<!-- Three type families, each with one job:
+     DotGothic16  — the dot-matrix display face, headings only
+     Inter        — body text and UI
+     IBM Plex Mono— tiny technical labels (dates, record numbers) -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 
 <style>
   /* ==========================================================
-     1. DESIGN TOKENS
-     These are named values reused everywhere below.
-     Change a color here and it updates across the WHOLE page.
+     1. TOKENS
      ========================================================== */
   :root{
-    --ink:#10151f;        /* main body text (near-black) */
-    --navy:#10151f;       /* headings and links */
-    --paper:#edeff2;      /* page background (cool light gray) */
-    --paper-2:#e3e6ea;    /* slightly darker gray, used in the About box */
-    --slate:#50565e;      /* secondary / muted text */
-    --brass:#a8793f;      /* accent color: hover states, small labels */
-    --brass-dim:#c79a5f;  /* lighter accent, used for underlines */
-    --line:#c7ccd1;       /* the strong full-width section dividers */
-    --line-soft:#dde0e4;  /* the lighter rules BETWEEN rows inside a section */
+    /* --- Colour. Three values plus two greys. Resist adding more. --- */
+    --black:#000000;
+    --paper:#f4f4f4;        /* the off-white background */
+    --white:#ffffff;
+    --red:#d71921;          /* the ONLY accent. Use sparingly. */
+    --grey:#8a8a8a;         /* muted text */
+    --rule:#d8d8d8;         /* hairlines */
+    --rule-soft:#e6e6e6;    /* lighter hairlines between rows */
 
-    --serif:'IBM Plex Mono', 'Courier New', monospace;
-    --sans:'IBM Plex Mono', 'Courier New', monospace;
+    /* --- THE DOT FIELD ---
+       A grid of dots painted across the whole page background.
+       --dot-color : how dark each dot is. This is the dial that
+                     matters most — too dark and it fights the text.
+                     Try #e9e9e9 for barely-there, #d5d5d5 for bold.
+       --dot-gap   : distance between dots. Smaller = denser.
+       --dot-size  : radius of each dot. Above ~1.2px it gets noisy. */
+    --dot-color:#dedede;
+    --dot-gap:11px;
+    --dot-size:1px;
+    /* Same idea for the dots on the black band, which need to be
+       light instead of dark to show up. */
+    --dot-color-dark:rgba(255,255,255,0.14);
+
+    /* --- SIDEBAR SURFACE ---
+       The sidebar sits a shade darker than the page so it reads as a
+       panel the content passes behind, and carries its own dot grid
+       at a slightly stronger contrast so the texture survives on the
+       darker tone.
+       --sidebar-bg  : the panel colour. #ececec is subtle; try
+                       #e4e4e4 for a harder separation from the page.
+       --dot-color-side : the dots on that panel. */
+    --sidebar-bg:#ececec;
+    --dot-color-side:#d4d4d4;
+
+    --display:'DotGothic16', 'Courier New', monospace;
+    --sans:'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     --mono:'IBM Plex Mono', 'Courier New', monospace;
 
-    /* Breathing room below the footer, at the very bottom of the page.
-       (The hero's top spacing now uses --section-gap instead, so that
-       it matches the gap before the About section.)
-       clamp(min, preferred, max) = "never smaller than 40px,
-       never bigger than 60px, otherwise scale with screen width." */
-    --edge-space:clamp(40px, 20vw, 60px);
+    /* --- Spacing. One dial for the gap between every block. --- */
+    --section-gap:clamp(64px, 10vw, 128px);
+    --row-space:clamp(24px, 3.4vw, 38px);
+    --head-gap:clamp(28px, 4vw, 48px);
 
-    /* ---- SPACING DIALS ----
-       These three control how airy the page feels.
-       Turn a number UP for more space, DOWN for tighter.
-       --section-gap : the TOTAL gap between any two blocks — hero to
-                       About, About to Projects, Contact to footer.
-                       Every boundary uses this same value, so the
-                       rhythm is identical all the way down the page.
-       --row-space   : space inside each project / experience row
-       --head-gap    : space under each section title (About, Projects...) */
-    --section-gap:clamp(40px, 9vw, 60px);
-    --row-space:clamp(20px, 3.4vw, 30px);
-    --head-gap:clamp(20px, 4.5vw, 30px);
+    --sidebar-w:220px;
+    --gutter:clamp(22px, 4vw, 60px);
+    --left-extra:40px;
 
-    /* Extra space ABOVE each divider line, on top of the section gap.
-       Turn this up if the rules feel too close to the content above them. */
-    /* Extra space ABOVE each divider line, on top of the section gap.
-       WARNING: any value other than 0 makes the gap above a divider
-       larger than the gap below it. Keep this at 0 if you want the
-       line to sit exactly centered between sections. */
-    --divider-lead:0px;
-
-    /* Width of the left sidebar on desktop. The page content is
-       pushed over by exactly this much. */
-    --sidebar-w:228px;
-
-    /* ---- CONTENT GUTTERS ----
-       --gutter      : side padding inside the text column (both edges)
-       --left-extra  : ONE dial that shifts the ENTIRE main body right,
-                       away from the sidebar — headings, text, the
-                       horizontal rules, and the footer alike.
-                       Desktop only; has no effect on phones.
-       Raise --left-extra until the left gap looks equal to the right. */
-    --gutter:clamp(20px, 4vw, 56px);
-    --left-extra:48px;
-
-    /* ---- TEXT SIZES ----
-       --body-text : the main prose — About paragraphs, project and
-                     job descriptions. Sits between the page default
-                     and the small mono labels.
-       The small labels (file numbers, tech tags, dates) stay at 12–13px
-       and are set individually, so this dial won't shrink them. */
-    --body-text:0.88rem;
-
-    /* ---- ROW ALIGNMENT ----
-       Projects, Experience and Personal all use a left label column
-       (dates, REG-401 codes) followed by the content. These two values
-       are shared by ALL of them, so titles and body text start at the
-       same x-position in every section.
-       If you change one, every section moves together. */
-    --label-col:120px;   /* width of the left label column */
-    --label-gap:24px;    /* space between that column and the content */
-
-    /* Size of the row titles — project names and job titles.
-       Projects, Experience and Personal all share it. */
+    /* ---- TYPE SCALE ----
+       Every size on the page now comes from one of these four, or from
+       a clamp() further down. Bumping a value here changes every place
+       it is used, so you never have to hunt through the file again.
+         --fs-micro : record numbers, dates, tech tags
+         --fs-small : sidebar links, spec values, org lines
+         --body-text: paragraphs
+         --row-title: project names and job titles */
+    --fs-micro:12px;
+    --fs-small:14px;
+    --body-text:1rem;
+    --label-col:118px;
+    --label-gap:24px;
     --row-title:1.15rem;
   }
 
-  /* Makes padding count INSIDE an element's width instead of adding to it.
-     Prevents boxes overflowing on small screens. Standard practice. */
   *{box-sizing:border-box;}
-
-  /* Smooth animated scrolling when you click a nav link */
   html{scroll-behavior:smooth;}
-
+  /* The dot field. Painted on <html> so it covers the full page height
+     including any area past the last section. background-attachment:fixed
+     keeps the grid locked to the screen rather than scrolling with the
+     content, so the dots never visibly "slide" behind the text. */
+  html{
+    background-color:var(--paper);
+    background-image:radial-gradient(var(--dot-color) var(--dot-size), transparent var(--dot-size));
+    background-size:var(--dot-gap) var(--dot-gap);
+    background-attachment:fixed;
+  }
   body{
     margin:0;
-    background:var(--paper);
-    color:var(--ink);
+    background:transparent;   /* let the dot field show through */
+    color:var(--black);
     font-family:var(--sans);
-    /* Body text grows slightly on bigger screens.
-       NOTE: the middle value must land BETWEEN the min and max for
-       clamp to actually scale. Your previous middle value (0.55vw + 14.5px)
-       was always above 14px, so the text was locked at 14px everywhere.
-       This version genuinely scales from ~13.5px to 15px. */
-    font-size:clamp(13.5px, 0.25vw + 12.5px, 15px);
-    /* Monospace is denser than a proportional font, so it needs more
-       line spacing than the usual 1.5–1.6 to stay comfortable. */
-    line-height:1.75;
+    font-size:clamp(15px, 0.3vw + 14px, 17px);
+    line-height:1.65;
     -webkit-font-smoothing:antialiased;
   }
+  a{color:inherit;}
+  a:focus-visible, button:focus-visible{outline:2px solid var(--red); outline-offset:3px;}
 
-  a{color:var(--navy); text-decoration-color:var(--brass-dim); text-underline-offset:3px;}
-  a:hover{color:var(--brass);}
-  /* Visible outline when tabbing with a keyboard — accessibility requirement */
-  a:focus-visible, button:focus-visible{outline:2px solid var(--brass); outline-offset:3px;}
-
-  /* ==========================================================
-     2. THE FLUID CONTAINER  ← this is what makes the site adapt
-     ==========================================================
-     .wrap is the invisible box that holds each section's content.
-
-     width:100%          → always fills whatever space is available
-     max-width:clamp(...) → the cap GROWS with the screen instead of
-                            being one fixed number. On a phone it's
-                            tiny, on a 27" monitor it's ~1180px wide.
-     padding:clamp(...)   → side margins also scale: 20px on a phone,
-                            up to 56px on a big screen.
-     margin:0 auto        → centers the box horizontally.
-
-     Nothing here is a fixed pixel width, so the layout reflows
-     continuously at every screen size rather than jumping.
-     ---------------------------------------------------------- */
-  /* NOTE: max-width is a plain number (not vw-based) because the
-     sidebar shifts this content sideways. A vw value measures the
-     WHOLE window, which would push content off the right edge.
-
-     This sets the padding INSIDE the text column. The gap between
-     the sidebar and the whole page is handled separately by
-     --left-extra, applied to <body> in the desktop block below. */
   .wrap{
-    width:100%;
-    max-width:1180px;
-    margin:0 auto;
-    padding-left:var(--gutter);
-    padding-right:var(--gutter);
+    width:100%; max-width:1240px; margin:0 auto;
+    padding-left:var(--gutter); padding-right:var(--gutter);
   }
+  .measure{max-width:66ch;}
 
-  /* Paragraph text still gets a reading-width cap. This is deliberate:
-     lines longer than ~75 characters are genuinely harder to read.
-     The 'ch' unit means "width of that many characters." */
-  .measure{max-width:68ch;}
+  /* Small technical label. Used for record numbers, dates, eyebrows. */
+  .tag{
+    font-family:var(--mono); font-size:var(--fs-micro);
+    letter-spacing:0.14em; text-transform:uppercase; color:var(--grey);
+  }
 
   /* ==========================================================
-     3. LEFT SIDEBAR NAVIGATION
-     ==========================================================
-     How it works:
-       - On screens 900px and wider: the sidebar is permanently
-         visible on the left, and the page body is pushed over by
-         --sidebar-w so nothing sits underneath it.
-       - Below 900px: the sidebar slides off-screen and a small
-         menu button appears in the top-left. Tapping it adds the
-         class "menu-open" to <body>, which slides the sidebar in.
+     2. SIDEBAR
      ========================================================== */
-
-  /* --- The hamburger button (mobile only) --- */
   .menu-btn{
-    position:fixed; top:14px; left:14px; z-index:70;
-    width:44px; height:44px;
-    display:flex; align-items:center; justify-content:center;
-    background:var(--paper); border:1px solid var(--line);
-    cursor:pointer; padding:0;
+    position:fixed; top:16px; left:16px; z-index:70;
+    width:42px; height:42px; display:flex; align-items:center; justify-content:center;
+    background:var(--white); border:1px solid var(--black); cursor:pointer; padding:0;
   }
-  /* Three stacked bars, drawn with one element plus two pseudo-elements */
-  .menu-btn span,
-  .menu-btn span::before,
-  .menu-btn span::after{
-    display:block; width:18px; height:1.5px; background:var(--ink);
+  .menu-btn span,.menu-btn span::before,.menu-btn span::after{
+    display:block; width:16px; height:1.5px; background:var(--black);
   }
   .menu-btn span{position:relative;}
-  .menu-btn span::before,
-  .menu-btn span::after{content:""; position:absolute; left:0;}
-  .menu-btn span::before{top:-6px;}
-  .menu-btn span::after{top:6px;}
+  .menu-btn span::before,.menu-btn span::after{content:""; position:absolute; left:0;}
+  .menu-btn span::before{top:-5px;}
+  .menu-btn span::after{top:5px;}
 
-  /* --- Dark screen behind the sidebar when open on mobile --- */
   .overlay{
-    position:fixed; inset:0; background:rgba(16,21,31,0.4);
+    position:fixed; inset:0; background:rgba(0,0,0,0.5);
     z-index:58; opacity:0; visibility:hidden; transition:opacity .2s ease;
   }
 
-  /* --- The sidebar itself --- */
+  /* The sidebar keeps a flat white background on purpose — it sits on
+     top of the dot field, giving the nav a calm surface to read against
+     and making the main column feel like the textured "page". */
   .sidebar{
     position:fixed; top:0; left:0;
     width:var(--sidebar-w); height:100vh;
-    background:var(--paper-2);
-    border-right:1px solid var(--line);
-    z-index:60;
-    display:flex; flex-direction:column;
-    padding:30px 0 28px;
-    overflow-y:auto;
-    transform:translateX(-100%);        /* hidden off-screen by default */
-    transition:transform .25s ease;
+    background-color:var(--sidebar-bg);
+    /* Same dot grid as the page, at the same gap and size. Using
+       background-attachment:fixed means the grid is measured from the
+       window rather than from the sidebar, so the sidebar's dots line
+       up exactly with the page's dots across the divider — the panel
+       reads as a tinted pane laid over one continuous field, rather
+       than two grids that happen to be near each other. */
+    background-image:radial-gradient(var(--dot-color-side) var(--dot-size), transparent var(--dot-size));
+    background-size:var(--dot-gap) var(--dot-gap);
+    background-attachment:fixed;
+    border-right:1px solid var(--rule);
+    z-index:60; display:flex; flex-direction:column;
+    padding:28px 0 26px; overflow-y:auto;
+    transform:translateX(-100%); transition:transform .25s ease;
   }
-  .sidebar__stamp{display:block; width:46px; height:46px; margin:0 24px 22px;}
+  .sidebar__stamp{display:block; width:40px; height:40px; margin:0 22px 20px;}
   .sidebar__stamp img{display:block; width:100%; height:100%;}
   .sidebar__name{
-    font-family:var(--serif); font-size:15px; font-weight:600;
-    color:var(--ink); text-decoration:none; padding:0 24px; line-height:1.4;
+    font-family:var(--display); font-size:21px; line-height:1.2;
+    color:var(--black); text-decoration:none; padding:0 22px;
   }
-  .sidebar__name .zh{display:block; font-size:13px; color:var(--slate); font-weight:400; margin-top:3px;}
-  .sidebar__label{
-    font-size:11px; letter-spacing:0.12em; color:var(--slate);
-    padding:0 24px; margin:26px 0 10px;
+  .sidebar__name .zh{
+    display:block; font-family:var(--sans); font-size:13px;
+    color:var(--grey); margin-top:6px; letter-spacing:0.1em;
   }
+  .sidebar__label{padding:0 22px; margin:30px 0 10px;}
 
   .side-links{display:flex; flex-direction:column;}
   .side-links a{
-    display:flex; align-items:baseline; gap:10px;
-    padding:9px 24px;
-    font-size:14px; color:var(--slate); text-decoration:none;
-    border-left:2px solid transparent;
-    transition:color .15s ease, background .15s ease, border-color .15s ease;
+    display:flex; align-items:baseline; gap:12px;
+    padding:8px 22px; font-size:var(--fs-small); color:var(--black);
+    text-decoration:none; transition:color .15s ease;
   }
-  .side-links a .num{font-size:11px; color:var(--brass); flex-shrink:0;}
-  .side-links a:hover{color:var(--ink); background:rgba(16,21,31,0.035);}
-  /* .active is added by the script at the bottom as you scroll */
-  .side-links a.active{
-    color:var(--ink); border-left-color:var(--brass);
-    background:rgba(16,21,31,0.05);
+  .side-links a .num{
+    font-family:var(--mono); font-size:var(--fs-micro); color:var(--grey);
+    flex-shrink:0; transition:color .15s ease;
   }
+  .side-links a:hover{color:var(--red);}
+  .side-links a:hover .num{color:var(--red);}
+  /* Active state: the number turns red. That's it — no bar, no fill.
+     One small red mark is louder here than a whole highlighted row. */
+  .side-links a.active{font-weight:600;}
+  .side-links a.active .num{color:var(--red);}
 
-  /* ==========================================================
-     SIDEBAR FOOTER — the CONTACT block
-     margin-top:auto is what pushes this to the bottom of the
-     sidebar, no matter how many nav links are above it.
-     ========================================================== */
   .sidebar__foot{
-    margin-top:auto;
-    padding:20px 24px 0;
-    border-top:1px solid var(--line);
-    display:flex; flex-direction:column;
+    margin-top:auto; padding:18px 22px 0;
+    /* Slightly stronger than --rule, because a hairline that reads
+       clearly on the light page gets lost on the darker panel. */
+    border-top:1px solid #cfcfcf; display:flex; flex-direction:column;
   }
-  /* The "CONTACT" heading. Uses the same look as "CONTENTS" above,
-     but without that rule's outer padding, since .sidebar__foot
-     already supplies it. */
-  .sidebar__foot .sidebar__label{
-    padding:0;
-    margin:0 0 12px;
-  }
-  /* Contact links show an icon plus a short label. The icons are inline
-     SVG in the HTML below — no icon font or external file to load.
-     currentColor makes each icon inherit the link's text color, so it
-     changes on hover automatically. */
-  .side-contact{display:flex; flex-direction:column; gap:2px;}
+  .sidebar__foot .sidebar__label{padding:0; margin:0 0 10px;}
+  .side-contact{display:flex; flex-direction:column;}
   .side-contact a{
-    display:flex; align-items:center; gap:10px;
-    padding:6px 0;
-    font-size:13px; color:var(--slate); text-decoration:none;
+    display:flex; align-items:center; gap:10px; padding:6px 0;
+    font-size:13.5px; color:var(--black); text-decoration:none;
     transition:color .15s ease;
   }
   .side-contact a svg{
-    width:15px; height:15px; flex-shrink:0;
-    stroke:currentColor; fill:none;
-    stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round;
+    width:14px; height:14px; flex-shrink:0;
+    stroke:currentColor; fill:none; stroke-width:1.6;
+    stroke-linecap:round; stroke-linejoin:round;
   }
-  .side-contact a:hover{color:var(--brass);}
+  .side-contact a:hover{color:var(--red);}
 
-  /* Small résumé download button, sized for the sidebar */
+  /* The one filled button on the page, so it reads as the one action. */
   .side-resume{
-    display:block; text-align:center;
-    margin-top:16px; padding:9px 10px;
-    font-family:var(--mono); font-size:12px;
-    color:var(--paper); background:var(--navy);
-    border:1px solid var(--navy); text-decoration:none;
+    display:block; text-align:center; margin-top:14px; padding:10px;
+    font-family:var(--mono); font-size:var(--fs-micro); letter-spacing:0.1em;
+    text-transform:uppercase; color:var(--white); background:var(--black);
+    border:1px solid var(--black); text-decoration:none;
     transition:background .15s ease, border-color .15s ease;
   }
-  .side-resume:hover{background:var(--brass); border-color:var(--brass); color:var(--paper);}
+  .side-resume:hover{background:var(--red); border-color:var(--red);}
 
-  /* --- Open state on mobile --- */
   body.menu-open .sidebar{transform:translateX(0);}
   body.menu-open .overlay{opacity:1; visibility:visible;}
 
-  /* --- Desktop: sidebar always visible, content shifted over --- */
+  /* ==========================================================
+     COLLAPSING THE SIDEBAR (desktop)
+     Clicking the arrow inside the sidebar adds .nav-closed to <body>.
+     That one class slides the sidebar out, pulls the content back to
+     fill the space, and reveals the menu button so you can bring it
+     back. Same pattern as the mobile menu — one class, CSS does the
+     rest — so there are no two systems to keep in sync.
+     ========================================================== */
+
+  /* The little arrow that lives in the sidebar's top-right corner */
+  .sidebar__toggle{
+    position:absolute; top:22px; right:14px;
+    width:26px; height:26px; padding:0;
+    display:none;                        /* desktop only; see below */
+    align-items:center; justify-content:center;
+    background:transparent; border:1px solid var(--rule);
+    color:var(--grey); cursor:pointer;
+    font-family:var(--mono); font-size:13px; line-height:1;
+    transition:color .15s ease, border-color .15s ease;
+  }
+  .sidebar__toggle:hover{color:var(--red); border-color:var(--red);}
+
   @media (min-width:900px){
-    /* margin-left  = clears the fixed sidebar
-       padding-left = the extra breathing room, applied to the WHOLE
-                      page body, so dividers and the footer shift too
-                      (they sit outside .wrap and would otherwise stay
-                      flush against the sidebar). */
     body{
       margin-left:var(--sidebar-w);
       padding-left:var(--left-extra);
+      transition:margin-left .28s cubic-bezier(.25,.1,.25,1);
     }
     .sidebar{transform:none;}
     .menu-btn,.overlay{display:none;}
+    .sidebar__toggle{display:flex;}
+
+    /* --- Collapsed state --- */
+    body.nav-closed{margin-left:0;}
+    body.nav-closed .sidebar{transform:translateX(-100%);}
+    /* The menu button reappears so the sidebar can be brought back */
+    body.nav-closed .menu-btn{display:flex;}
+    /* Give the hero room so the floating button doesn't sit on the text */
+    body.nav-closed .hero{padding-top:calc(var(--section-gap) + 24px);}
   }
 
-  /* ==========================================================
-     4. HERO (the big name area at the top)
-     ========================================================== */
-  /* IMPORTANT: only the TOP and BOTTOM are set here.
-     The old version used the shorthand `padding: var(--edge-space) 0`,
-     which also set left/right padding to 0 — overriding the padding
-     .wrap gives every other section. That is why the hero sat further
-     left than "About", "Projects", etc.
-     Setting only padding-top / padding-bottom leaves .wrap's
-     horizontal padding intact, so everything lines up.
+  @media (prefers-reduced-motion: reduce){
+    body,.sidebar{transition:none !important;}
+  }
+  /* Present only for the first frame, so a remembered state applies
+     instantly rather than animating into place on every page load. */
+  body.no-anim,body.no-anim .sidebar{transition:none !important;}
 
-     SPACING: the bottom is half of --section-gap, exactly like every
-     other section, so the About section below adds the other half and
-     the hero → About gap equals every section-to-section gap.
-     The top gets a FULL --section-gap because there is nothing above
-     it to contribute the other half — the page just starts there. */
+  /* ==========================================================
+     3. HERO
+     The dot grid behind it is drawn in CSS with radial-gradient —
+     no image file. It echoes the dot-matrix type without shouting.
+     ========================================================== */
   .hero{
     padding-top:var(--section-gap);
     padding-bottom:calc(var(--section-gap) / 2);
-  }
-  .hero .kicker{font-family:var(--mono); font-size:13px; color:var(--brass); margin:0 0 18px;}
-  .hero h1{
-    font-family:var(--serif); font-weight:500;
-    /* Headline scales smoothly between 2.1rem and 3.6rem based on screen width */
-    font-size:clamp(2.1rem, 5.5vw, 3.6rem);
-    line-height:1.12; margin:0; color:var(--navy);
-  }
-  .hero h1 .zh{
-    display:block; font-size:0.5em; color:var(--slate);
-    font-weight:400; margin-top:10px; letter-spacing:0.08em;
-  }
-  .hero .lede{font-size:1.13rem; margin:26px 0 32px;}
-  .hero .lede em{font-style:normal; color:var(--navy); border-bottom:1px solid var(--brass-dim);}
-  .hero-meta{
-    display:flex; flex-wrap:wrap; gap:8px 22px;
-    font-family:var(--mono); font-size:13px; color:var(--slate);
-  }
-
-  /* Fade-up animation on page load. .reveal is added to elements in the HTML below. */
-  .reveal{opacity:0; transform:translateY(10px); animation:up 0.7s ease forwards;}
-  .reveal:nth-child(2){animation-delay:0.08s;}
-  .reveal:nth-child(3){animation-delay:0.16s;}
-  .reveal:nth-child(4){animation-delay:0.24s;}
-  @keyframes up{to{opacity:1; transform:none;}}
-  /* Respects the OS setting for people who get motion sickness from animations */
-  @media (prefers-reduced-motion: reduce){
-    .reveal{animation:none; opacity:1; transform:none;}
-    html{scroll-behavior:auto;}
-  }
-
-  /* ==========================================================
-     5. LIGHTHOUSE PHOTO BAND
-     object-fit:cover = crop to fill the space without squashing.
-     Height scales with the screen instead of being fixed.
-     ========================================================== */
-  /*.banner{
-    width:100%;
-    height:clamp(160px, 30vw, 340px);
-    object-fit:cover;
-    display:block;
-    border-top:1px solid var(--line);
-    border-bottom:1px solid var(--line);
-  } */
-  /* ========================================================== */
-
-  /* ==========================================================
-     6. SECTION DIVIDERS  ← your request #2
-     ==========================================================
-     Every section gets:
-       - a full-width horizontal rule above it (.divider)
-       - a small brass tick mark, so the break reads as intentional
-     To remove a divider, just delete its <hr class="divider"> line
-     in the HTML below.
-     ---------------------------------------------------------- */
-  .divider{
-    border:0;
-    height:0px;
-    background:var(--line);
-    /* Extra air above the line, on top of the section padding.
-       Controlled by --divider-lead near the top of this file. */
-    margin:var(--divider-lead) 0 0;
     position:relative;
   }
-  /* The short brass segment sitting on top of the gray line */
-  .divider::before{
+  /* A denser patch of dots in the hero corner. Because the whole page
+     now carries the light grid, this one is tightened and darkened so
+     it still registers as a deliberate mark rather than more of the
+     same texture. */
+  .hero::before{
     content:"";
-    position:absolute;
-    left:0; top:0;
-    width:64px; height:1px;
-    background:var(--brass);
+    position:absolute; top:0; right:0;
+    width:min(300px, 38%); height:180px;
+    background-image:radial-gradient(#c9c9c9 1px, transparent 1px);
+    background-size:7px 7px;
+    pointer-events:none;
+  }
+  .hero .eyebrow{margin:0 0 clamp(28px, 5vw, 52px);}
+  .hero h1{
+    font-family:var(--display); font-weight:400;
+    font-size:clamp(2.9rem, 9.5vw, 7rem);
+    line-height:0.98; letter-spacing:-0.01em;
+    margin:0; color:var(--black); position:relative;
+  }
+  /* The bracketed half of the name, Nothing-style. Kept grey so the
+     brackets read as a system convention rather than decoration. */
+  .hero h1 .bracket{color:var(--grey);}
+  .hero .zh{
+    font-family:var(--sans); font-size:clamp(1.05rem, 1.7vw, 1.3rem);
+    letter-spacing:0.4em; color:var(--grey); margin:22px 0 0;
+  }
+  .hero-meta{
+    display:flex; flex-wrap:wrap; gap:10px 34px;
+    margin-top:clamp(36px, 6vw, 64px);
   }
 
-  /* Space above and below every section. Controlled by --section-gap.
-     Because the gap ABOVE a divider (this section's padding-bottom)
-     and the gap BELOW it (the next section's padding-top) both come
-     from this one value, the divider always sits exactly halfway
-     between the content above and below it. */
-  /* Space between blocks.
-     IMPORTANT: each section contributes HALF the gap (its own bottom
-     padding) and the next section contributes the other half (its top
-     padding). Together they add up to exactly one --section-gap.
-     That is why this is divided by 2 — otherwise every boundary
-     between two sections would be double the size of any gap that
-     only has one section next to it (like hero → About). */
+  /* ==========================================================
+     3b. COLLAPSIBLE SECTIONS
+     Each section is a <details> element: the <summary> is the row you
+     see when it's closed, and everything inside .fold__body is hidden
+     until you click. <details> is native HTML — the open/close is
+     free, works without JavaScript, and is keyboard accessible.
+
+     TO HAVE ONE OPEN ON PAGE LOAD: add the word open to its tag, e.g.
+       <details class="fold" id="fold-about" open>
+     ========================================================== */
+  .fold summary{
+    list-style:none;                  /* hide the default triangle */
+    cursor:pointer;
+  }
+  .fold summary::-webkit-details-marker{display:none;}   /* Safari's */
+
+  /* The summary reuses .section-head, so the closed row looks exactly
+     like the section title did before. margin-bottom is removed when
+     closed so the collapsed rows sit tight against each other. */
+  .fold summary.section-head{margin-bottom:0; padding:6px 0;}
+  .fold[open] summary.section-head{margin-bottom:var(--head-gap);}
+
+  /* Our own +/- marker, drawn as text so it inherits the mono font */
+  .fold summary .sign{
+    font-family:var(--mono); font-size:1.15rem; color:var(--grey);
+    line-height:1; transition:color .15s ease;
+  }
+  .fold summary:hover .sign{color:var(--red);}
+  .fold summary:hover h2{color:var(--red);}
+  .fold[open] summary .sign::before{content:"\2013";}    /* en dash */
+  .fold:not([open]) summary .sign::before{content:"+";}
+  .fold summary h2{transition:color .15s ease;}
+  /* The summary row holds three things: the title, the RECORD tag, and
+     the +/- sign. With space-between alone the tag would drift to the
+     middle; margin-left:auto pushes the tag and sign together on the
+     right, leaving the title alone on the left. */
+  .fold summary.section-head .tag{margin-left:auto;}
+  .fold summary.section-head{gap:18px;}
+
+  /* The body must clip its own overflow while it is being animated,
+     otherwise the content spills out during the slide. */
+  .fold__body{overflow:hidden;}
+
+  /* These two also change when a fold opens (the summary's bottom
+     margin, and the section's padding via the :has() rule below).
+     Transitioning them keeps the whole row moving as one piece
+     instead of the text sliding while the spacing snaps. */
+  .fold summary.section-head{
+    transition:margin-bottom .34s cubic-bezier(.25,.1,.25,1);
+  }
+
+  /* The +/- marker rotates rather than swapping glyphs abruptly. */
+  .fold summary .sign{
+    display:inline-block;
+    transition:color .15s ease, transform .34s cubic-bezier(.25,.1,.25,1);
+  }
+  .fold[open] summary .sign{transform:rotate(180deg);}
+
+  /* Someone who has asked their OS to reduce motion gets the instant
+     version. Never animate for a person who has opted out. */
+  @media (prefers-reduced-motion: reduce){
+    .fold summary.section-head,
+    .fold summary .sign,
+    section{transition:none !important;}
+  }
+
+  /* ==========================================================
+     4. SECTIONS
+     ========================================================== */
   section{
     padding-top:calc(var(--section-gap) / 2);
     padding-bottom:calc(var(--section-gap) / 2);
   }
+  /* A collapsed section is just a title row, so it needs far less
+     padding than an open one — otherwise the folded page is mostly
+     empty space. :has() checks the section's own state. */
+  section{transition:padding .34s cubic-bezier(.25,.1,.25,1);}
+  section:has(.fold:not([open])){
+    padding-top:calc(var(--section-gap) / 5);
+    padding-bottom:calc(var(--section-gap) / 5);
+  }
+  .divider{border:0; height:1px; background:var(--rule); margin:0;}
 
-  /* The rule under each section title has been removed.
-     To bring it back, add: border-bottom:1px solid var(--line); */
   .section-head{
     display:flex; align-items:baseline; justify-content:space-between;
-    margin-bottom:var(--head-gap);
-    gap:16px; flex-wrap:wrap;
+    gap:16px; flex-wrap:wrap; margin-bottom:var(--head-gap);
   }
   .section-head h2{
-    font-family:var(--serif); font-weight:500;
-    font-size:clamp(1rem, 2.4vw, 1.5rem);
-    /* line-height MUST be tight here. The page default of 1.75 adds
-       invisible space above and below the text ("leading"), which made
-       the gap under a divider look bigger than the gap above it even
-       though the padding was identical. 1.1 removes almost all of it. */
-    line-height:1.1;
-    margin:0; color:var(--navy);
+    font-family:var(--display); font-weight:400;
+    font-size:clamp(1.7rem, 3.4vw, 2.6rem);
+    line-height:1.1; margin:0; color:var(--black);
   }
-  .section-head .tag{font-family:var(--mono); font-size:12px; color:var(--slate);}
+  .section-head h2 .bracket{color:var(--grey);}
 
   /* ==========================================================
-     7. ABOUT SECTION
-     grid-template-columns: 220px 1fr = fixed sidebar + flexible rest.
-     The @media rule at the bottom stacks these on narrow screens.
+     5. ABOUT
      ========================================================== */
   .about-grid{
-  display:grid;
-  grid-template-columns:minmax(180px, 240px) 1fr;
-  gap:clamp(24px, 4vw, 52px);
-  border-top:1px solid var(--line);
-  padding-top:var(--row-space);
-}
-  .about-card{
-    border:1px solid var(--line); background:var(--paper-2);
-    padding:26px 24px; font-family:var(--mono); font-size:13px; color:var(--slate);
-    align-self:start;
+    display:grid; grid-template-columns:minmax(170px, 230px) 1fr;
+    gap:clamp(24px, 4vw, 56px);
+    border-top:1px solid var(--rule-soft); padding-top:var(--row-space);
   }
+  .about-card{align-self:start;}
   .about-card dl{margin:0;}
-  .about-card dt{color:var(--ink); font-weight:500; margin-top:20px;}
+  .about-card dt{
+    font-family:var(--mono); font-size:var(--fs-micro); letter-spacing:0.12em;
+    text-transform:uppercase; color:var(--grey); margin-top:18px;
+  }
   .about-card dt:first-child{margin-top:0;}
-  .about-card dd{margin:4px 0 0; color:var(--slate);}
-  .about-body p{margin:0 0 22px; font-size:var(--body-text);}
+  .about-card dd{margin:4px 0 0; font-size:var(--fs-small); color:var(--black);}
+  .about-body p{margin:0 0 20px; font-size:var(--body-text);}
   .about-body p:last-child{margin-bottom:0;}
+  /* The opening line gets to be big. One emphatic sentence, then quiet. */
+  .about-body .lead{
+    font-size:clamp(1.15rem, 2.1vw, 1.5rem);
+    line-height:1.45; margin-bottom:28px;
+  }
 
   /* ==========================================================
-     8. EXPERIENCE — ledger-style rows
+     6. ROWS  (Education, Projects, Experience, Personal)
+     All four share --label-col and --label-gap so every title and
+     paragraph starts at the same x-position down the whole page.
      ========================================================== */
-  /* Inner rules use --line-soft so they read as lighter than the
-     full-width section dividers. Change --line-soft in :root to tune. */
-  .ledger{border-top:1px solid var(--line-soft);}
+  .ledger,.records{border-top:1px solid var(--rule-soft);}
+
   .ledger-row{
-    display:grid;
-    /* code | details | date — the first column and gap match .record
-       exactly so Experience lines up with Projects and Personal. */
-    grid-template-columns:var(--label-col) 1fr 140px;
-    gap:var(--label-gap);
-    padding:var(--row-space) 0;              /* row height dial */
-    border-bottom:1px solid var(--line-soft);
+    display:grid; grid-template-columns:var(--label-col) 1fr 130px;
+    gap:var(--label-gap); padding:var(--row-space) 0;
+    border-bottom:1px solid var(--rule-soft);
   }
-  .ledger-row .code{font-family:var(--mono); font-size:13px; color:var(--brass); padding-top:2px;}
-  /* Job titles. Same weight, color and size as the project titles in
-     Projects and Personal — see .record h3 below. Change --row-title
-     to resize all three sections at once. */
-  .ledger-row .role{
-    font-weight:600; color:var(--ink);
-    font-size:var(--row-title);
-    line-height:1.3;
-    margin:0 0 6px;
-  }
-  /* Institution / employer line. Uses --ink like the rest of the body
-     text, not the muted --slate, so it reads at the same weight of
-     attention as everything else. */
-  .ledger-row .org{color:var(--ink); font-size:14px; margin:0 0 14px;}
-  .ledger-row .desc{margin:0; color:var(--ink); font-size:var(--body-text); max-width:62ch;}
-  .ledger-row .years{font-family:var(--mono); font-size:13px; color:var(--slate); text-align:right; padding-top:2px;}
-
-  /* ==========================================================
-     9. PROJECTS — record rows
-     To ADD a project: copy one whole <div class="record">...</div>
-     block in the HTML below and change the text inside it.
-     ========================================================== */
-  .records{border-top:1px solid var(--line-soft);}
   .record{
-    display:grid;
-    grid-template-columns:var(--label-col) 1fr;
-    gap:var(--label-gap);
-    padding:var(--row-space) 0;              /* row height dial */
-    border-bottom:1px solid var(--line-soft);
+    display:grid; grid-template-columns:var(--label-col) 1fr;
+    gap:var(--label-gap); padding:var(--row-space) 0;
+    border-bottom:1px solid var(--rule-soft);
   }
-  .record .file-no{font-family:var(--mono); font-size:12px; color:var(--slate); padding-top:6px;}
-  /* Project titles. Matched to .ledger-row .role above: same weight,
-     same --ink color, same --row-title size. */
-  .record h3{
-    font-weight:600; color:var(--ink);
-    font-size:var(--row-title);
-    line-height:1.3;
-    margin:0 0 12px;
+
+  .ledger-row .code,.record .file-no{
+    font-family:var(--mono); font-size:var(--fs-micro); letter-spacing:0.1em;
+    text-transform:uppercase; color:var(--grey); padding-top:5px;
   }
-  .record h3 a{text-decoration:none; color:inherit; border-bottom:1px solid var(--brass-dim);}
-  .record h3 a:hover{color:var(--brass); border-bottom-color:var(--brass);}
-  .record p{margin:0 0 16px; font-size:var(--body-text); max-width:64ch;}
-  .record .stack{font-family:var(--mono); font-size:12px; color:var(--brass); letter-spacing:0.02em;}
-  .record .visit{
-    font-family:var(--mono); font-size:12px; color:var(--slate);
-    text-decoration:none; border-bottom:1px solid var(--line); margin-left:14px;
+  .ledger-row .years{
+    font-family:var(--mono); font-size:var(--fs-micro); letter-spacing:0.1em;
+    text-transform:uppercase; color:var(--grey); text-align:right; padding-top:5px;
   }
-  .record .visit:hover{color:var(--brass); border-bottom-color:var(--brass);}
+
+  .ledger-row .role,.record h3{
+    font-family:var(--display); font-weight:400;
+    font-size:var(--row-title); line-height:1.25;
+    margin:0 0 6px; color:var(--black);
+  }
+  .record h3{margin-bottom:10px;}
+  .record h3 a{text-decoration:none; transition:color .15s ease;}
+  .record h3 a:hover{color:var(--red);}
+
+  .ledger-row .org{font-size:var(--fs-small); color:var(--grey); margin:0 0 14px;}
+  .ledger-row .desc,.record p{
+    margin:0 0 14px; font-size:var(--body-text); max-width:64ch;
+  }
+  .record .stack{
+    font-family:var(--mono); font-size:var(--fs-micro); letter-spacing:0.06em; color:var(--grey);
+  }
+  .record .visit,.ledger-row .visit{
+    font-family:var(--mono); font-size:var(--fs-micro); letter-spacing:0.06em;
+    color:var(--black); text-decoration:none;
+    border-bottom:1px solid var(--black); margin-left:16px;
+    transition:color .15s ease, border-color .15s ease;
+  }
+  .record .visit:hover,.ledger-row .visit:hover{color:var(--red); border-color:var(--red);}
 
   /* ==========================================================
-     10. CONTACT
+     7. INVERTED BAND
+     One full-width black strip. It breaks the page in half and is
+     the main reason this reads as designed rather than defaulted.
      ========================================================== */
-  .contact-row{display:flex; flex-wrap:wrap; gap:14px 40px; align-items:center; margin-bottom:28px;}
-  .contact-row a{font-size:1rem;}
-  .resume-btn{
-    display:inline-block; font-family:var(--mono); font-size:13px;
-    color:var(--paper); background:var(--navy); padding:12px 20px;
-    text-decoration:none; border:1px solid var(--navy);
+  /* The black band is the one place the dot field inverts: light dots
+     on black instead of dark dots on paper. */
+  .band{
+    background-color:var(--black); color:var(--paper);
+    background-image:radial-gradient(var(--dot-color-dark) var(--dot-size), transparent var(--dot-size));
+    background-size:var(--dot-gap) var(--dot-gap);
+    margin-top:calc(var(--section-gap) / 2);
+    padding-top:clamp(56px, 8vw, 96px);
+    padding-bottom:clamp(56px, 8vw, 96px);
+    position:relative; overflow:hidden;
   }
-  .resume-btn:hover{background:var(--brass); border-color:var(--brass); color:var(--paper);}
-  .contact-note{font-size:13px; color:var(--slate); max-width:56ch;}
+  /* On desktop the page body is already pushed in from the left by
+     --left-extra, but the band ran all the way to the right edge of the
+     window — so it looked pinned to the right rather than placed on the
+     page. Matching that inset on the right makes it read as a block
+     floating on the dot field, with the same margin on both sides. */
+  @media (min-width:900px){
+    .band{margin-right:var(--left-extra);}
+  }
+  .band::after{
+    content:"";
+    position:absolute; right:-40px; bottom:-40px;
+    width:260px; height:260px;
+    background-image:radial-gradient(var(--dot-color-dark) 1px, transparent 1px);
+    background-size:var(--dot-gap) var(--dot-gap);
+    pointer-events:none;
+  }
+  .band p{
+    font-family:var(--display); font-weight:400;
+    font-size:clamp(1.4rem, 3.6vw, 2.4rem);
+    line-height:1.35; margin:0; max-width:22ch; position:relative;
+  }
+  .band .tag{color:rgba(244,244,244,0.55); display:block; margin-bottom:22px;}
 
   /* ==========================================================
-     11. FOOTER  ← your request #3: bottom space now matches the top
-     Both use the same --edge-space value defined at the very top.
+     THE PLAYER
+     A small fixed panel in the bottom-right. It stays put whether the
+     sidebar is open or collapsed, so the visitor can always stop the
+     music — which matters, because it starts on its own.
+     ========================================================== */
+  .player{
+    position:fixed; right:18px; bottom:18px; z-index:65;
+    /* Wide enough that Spotify's compact player fits its controls
+       without clipping. Below about 340px Spotify starts hiding
+       elements, so don't shrink this much further. */
+    width:400px; max-width:calc(100vw - 36px);
+    background:var(--white); border:1px solid var(--black);
+    padding:10px 10px 8px;
+    transition:transform .3s cubic-bezier(.25,.1,.25,1), opacity .3s ease;
+  }
+  .player__head{
+    display:flex; align-items:center; justify-content:space-between;
+    gap:10px; margin-bottom:8px;
+  }
+  .player__head .tag{margin:0;}
+  .player__close{
+    background:transparent; border:0; padding:0 2px; cursor:pointer;
+    font-family:var(--mono); font-size:14px; line-height:1; color:var(--grey);
+    transition:color .15s ease;
+  }
+  .player__close:hover{color:var(--red);}
+  .player iframe{display:block; width:100%; border:0;}
+
+  /* Dismissed: slides down out of view but keeps playing until paused */
+  .player.is-hidden{transform:translateY(140%); opacity:0; pointer-events:none;}
+
+  /* A small dot that brings the player back after dismissing it */
+  .player-recall{
+    position:fixed; right:18px; bottom:18px; z-index:64;
+    width:38px; height:38px; display:none;
+    align-items:center; justify-content:center;
+    background:var(--black); color:var(--paper);
+    border:1px solid var(--black); cursor:pointer;
+    font-family:var(--mono); font-size:14px; line-height:1;
+    transition:background .15s ease;
+  }
+  .player-recall:hover{background:var(--red); border-color:var(--red);}
+  .player-recall.is-shown{display:flex;}
+
+  @media (max-width:560px){
+    .player{right:12px; bottom:12px; width:calc(100vw - 24px);}
+  }
+
+  /* ==========================================================
+     8. FOOTER
      ========================================================== */
   footer{
-    /* Half a gap, matching every other block boundary — the Contact
-       section above supplies the other half. */
     padding-top:calc(var(--section-gap) / 2);
-    padding-bottom:var(--edge-space);   /* breathing room at the very bottom */
-    font-family:var(--mono); font-size:12px; color:var(--slate);
-    display:flex; align-items:center; gap:12px; flex-wrap:wrap;
+    padding-bottom:clamp(48px, 7vw, 80px);
+    display:flex; align-items:center; gap:14px; flex-wrap:wrap;
   }
-  footer img{width:26px; height:26px; opacity:0.85;}
+  footer img{width:24px; height:24px;}
   footer p{margin:0;}
 
   /* ==========================================================
-     12. SMALL-SCREEN ADJUSTMENTS
-     A @media block means "only apply these rules when the screen
-     is narrower than 720px." Multi-column grids collapse to one
-     column so nothing gets squeezed on a phone.
+     9. SMALL SCREENS
      ========================================================== */
   @media (max-width:720px){
     .about-grid{grid-template-columns:1fr;}
-    .ledger-row{grid-template-columns:1fr; gap:6px;}
+    .ledger-row{grid-template-columns:1fr; gap:8px;}
     .ledger-row .years{text-align:left;}
     .record{grid-template-columns:1fr; gap:8px;}
   }
-
-  /* Below 900px the menu button floats over the top-left corner,
-     so the hero needs extra clearance underneath it. This is the one
-     place the top gap is intentionally larger than --section-gap —
-     otherwise the button would overlap the text.
-     This block must stay near the END of the stylesheet: CSS applies
-     the LAST matching rule, so placing it before .hero would have no
-     effect at all. */
   @media (max-width:899px){
-    .hero{padding-top:calc(var(--section-gap) + 46px);}
+    .hero{padding-top:calc(var(--section-gap) + 40px);}
+    .hero::before{display:none;}
   }
-
-  /* ---- Spacing notes ----
-     Section spacing now comes from the --section-gap token near the
-     top of this stylesheet, so there is no override needed here.
-     To make the WHOLE page airier or tighter, change these three
-     values in the :root block and nothing else:
-        --section-gap  (space between sections)
-        --row-space    (space inside project/experience rows)
-        --head-gap     (space under section titles)
-     The hero is separate and uses --edge-space. */
-
-  /* Every section, including Contact, now uses the same --section-gap
-     so the rhythm is identical throughout. The footer supplies its own
-     space below via --edge-space. */
-
 </style>
 </head>
-<body>
+<body class="no-anim">
 
-<!-- ============ MOBILE MENU BUTTON ============
-     Only visible on screens under 900px wide. -->
 <button class="menu-btn" aria-label="Open menu" aria-expanded="false"><span></span></button>
-
-<!-- Dark screen behind the sidebar on mobile. Tapping it closes the menu. -->
 <div class="overlay"></div>
 
-<!-- ============ SIDEBAR ============
-     To add a nav item, copy one <li> line and point its href at a
-     section's id (the id="..." on each <section> below). -->
 <aside class="sidebar">
+
+  <!-- Collapses the sidebar on desktop. Hidden on phones, where the
+       menu button already does this job. -->
+  <button class="sidebar__toggle" aria-label="Collapse sidebar" aria-expanded="true">&#8592;</button>
 
   <a class="sidebar__stamp" href="#top" aria-label="Elliot Li — home">
     <img src="pics/stamp.png" alt="Elliot Li 李正赜 seal">
   </a>
 
-  <a class="sidebar__name" href="#top"></a>
+  <a class="sidebar__name" href="#top">
+    elliot<br>( li )
+  </a>
 
-  <!-- <a class="sidebar__name" href="#top">
-    Elliot Li
-    <span class="zh">李正赜</span>
-  </a> -->
-
-  <div class="sidebar__label">CONTENTS</div>
+  <div class="sidebar__label tag">Contents</div>
 
   <nav class="side-links">
-    <a href="#about"><span class="num">001</span>About</a>
-    <a href="#education"><span class="num">002</span>Education</a>
-    <a href="#projects"><span class="num">003</span>Projects</a>
-    <a href="#experience"><span class="num">004</span>Experience</a>
-    <a href="#personal"><span class="num">005</span>Personal</a>
+    <a href="#about"><span class="num">001</span>About 关  于</a>
+    <a href="#education"><span class="num">002</span>Education 教  育</a>
+    <a href="#projects"><span class="num">003</span>Projects 计  划</a>
+    <a href="#experience"><span class="num">004</span>Experience 经  历</a>
+    <a href="#personal"><span class="num">005</span>Personal 个  人</a>
   </nav>
 
-  <!-- ============ CONTACT (sidebar) ============
-       This replaces the old Contact section in the main body.
-       The email shows the actual address on purpose: mailto: only opens
-       something if the visitor has a default mail app configured, and
-       many don't — this way they can always read and copy it.
-       The résumé button needs a file named resume.pdf in this folder. -->
   <div class="sidebar__foot">
-    <div class="sidebar__label">CONTACT</div>
+    <div class="sidebar__label tag">Contact</div>
     <div class="side-contact">
-
-      <!-- Each link is an inline SVG icon plus its label. To go
-           icon-only, delete the text after </svg>; keep aria-label so
-           screen readers still announce what the link is. -->
-
       <a href="mailto:zl516@georgetown.edu" aria-label="Email">
         <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="4.5" width="19" height="15" rx="1.5"/><path d="M3 6l9 6.5L21 6"/></svg>
-        Email
+        e m a i l
       </a>
-
-      <!-- target="_blank" opens in a new tab; rel="noopener" is a security best practice -->
       <a href="https://www.linkedin.com/in/zhengze-li-90517b193/" target="_blank" rel="noopener" aria-label="LinkedIn">
         <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="2.5" width="19" height="19" rx="2"/><path d="M7 10.5v7M7 7v.01M11.5 17.5v-4a2.5 2.5 0 015 0v4"/><path d="M11.5 10.5v7"/></svg>
-        LinkedIn
+         l i n k e d i n
       </a>
-
       <a href="https://github.com/elliotzli" target="_blank" rel="noopener" aria-label="GitHub">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 19c-4.5 1.5-4.5-2.5-6.5-3M15 21v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 00-1.3-3.2 4.3 4.3 0 00-.1-3.2s-1-.3-3.4 1.3a11.6 11.6 0 00-6.2 0C6.6 2.8 5.6 3.1 5.6 3.1a4.3 4.3 0 00-.1 3.2A4.6 4.6 0 004.2 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg>
-        GitHub
+         g i t h u b
       </a>
-
       <a href="https://www.instagram.com/elliotzli10" target="_blank" rel="noopener" aria-label="Instagram">
         <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="2.5" width="19" height="19" rx="5"/><circle cx="12" cy="12" r="4"/><path d="M17.5 6.5v.01"/></svg>
-        Instagram
+         i n s t a g r a m
       </a>
-
     </div>
-    <a class="side-resume" href="pics/Resume_2026_Li_Zhengze.pdf">Résumé (PDF)</a>
+    <a class="side-resume" href="pics/Resume_2026_Li_Zhengze.pdf">r é s u m é</a>
   </div>
 
 </aside>
@@ -705,92 +679,91 @@
 
   <!-- ============ HERO ============ -->
   <section class="hero wrap">
-    <p class="kicker reveal">RECORD 2000 </p>
-    <h1 class="reveal">Elliot Li</h1>
-    <p class="lede measure reveal"></p>
-    <div class="hero-meta reveal">
+    <p class="eyebrow tag">Record 20001010</p>
+    <h1>elliot <span class="bracket">( li )</span></h1>
+    <p class="zh">李 正 赜 li zhengze</p>
+    <div class="hero-meta tag">
       <span>Washington, DC</span>
+      <span>Wuhan, China</span>
     </div>
-    <div class="hero-meta reveal">
-      <span>M.S. Data Science · B.S. Finance</span>
-    </div>
-
   </section>
 
-  <!-- ============ PHOTO BAND (currently hidden) ============
-       To bring the photo back, delete the comment opener on the line
-       above and the closer on the line below, leaving just the <img>.
-       Change the src to swap the photo; keep the file in this folder.
-
-  <img class="banner" src="lighthouse.jpg" alt="Lighthouse at dusk">
-
-       ======================================================== -->
+  <hr class="divider">
 
   <!-- ============ ABOUT ============ -->
   <section id="about" class="wrap">
-    <div class="section-head">
-      <h2>About</h2>
-      <span class="tag">RECORD 001</span>
-    </div>
-    <div class="about-grid">
+    <details class="fold" id="fold-about">
+      <summary class="section-head">
+        <h2>a b o u t <span class="bracket">( 关于 )</span></h2>
+      <span class="tag">Record 001</span>
+        <span class="sign" aria-hidden="true"></span>
+      </summary>
+      <div class="fold__body">
+<div class="about-grid">
 
-      <!-- Left box: quick facts. dt = the label, dd = the value. -->
       <div class="about-card">
         <dl>
           <dt>Role</dt>
           <dd>Systems &amp; Data Analyst</dd>
           <dt>Office</dt>
-          <dd>Georgetown Law </dd>
+          <dd>Georgetown Law</dd>
           <dt>Skills</dt>
           <dd>Python · R · SQL · Cognos · Data Vis</dd>
           <dt>Hobbies</dt>
           <dd>Fashion · Investing · Film</dd>
           <dt>Languages</dt>
           <dd>English · Chinese</dd>
-
-
-
-
         </dl>
       </div>
 
-      <!-- Right side: your bio paragraphs -->
       <div class="about-body measure">
-        <p>
-          This site is where I keep the things I've made — research projects on one side, personal whimsy on the other.
+        <p class="lead">
+          This site is where I keep the things I've made. Research projects on
+          one side, personal whimsy on the other.
         </p>
         <p>
-          By day I keep a law school's records systems in
-          order: I'm a Systems and Data Analyst at Georgetown Law, which mostly
-          means crunching Excel sheets and writing Python scripts that turn messy operational and financial workflows
-          into something tidy and automated. I like work that has to be exactly right.
+          By day I keep a law school's records systems in order: I'm a Systems and
+          Data Analyst at Georgetown Law, which mostly means crunching Excel sheets
+          and writing Python scripts that turn messy operational and financial
+          workflows into something tidy and automated.
         </p>
         <p>
-          Outside of that I collect vintage pieces and read more fashion analysis than is probably reasonable — how a silhouette gets invented, argued over, and revived interests me as much as the clothes themselves.
-          Film pulls at the same thread. I'll happily lose an evening to why a director put the camera exactly there, and what the shot is quietly saying that the dialogue isn't.
-          I'm learning to DJ, which so far is mostly failed beat matching in my apartment.
-          And I think in both English and Chinese, usually switching to whichever one has the better word.
-          I follow markets closely enough thanks to both my finance and data science degree which give me a solid foundation in understanding market dynamics.
+          Outside of that I collect vintage pieces and read more fashion analysis
+          than is probably reasonable — how a silhouette gets invented, argued over,
+          and revived interests me as much as the clothes themselves. Film pulls at
+          the same thread. I'll happily lose an evening to why a director put the
+          camera exactly there, and what the shot is quietly saying that the dialogue
+          isn't.
+        </p>
+        <p>
+          I'm learning to DJ, which so far is mostly failed beat matching in my
+          apartment. I follow markets closely enough thanks to both my finance and
+          data science degrees, which give me a solid foundation in understanding
+          market dynamics. And I think in both English and Chinese, usually switching
+          to whichever one has the better word.
         </p>
       </div>
 
     </div>
+      </div>
+    </details>
   </section>
 
   <hr class="divider">
 
-  <!-- ============ EDUCATION ============
-       Same .ledger structure as Experience, so rows can be moved
-       between the two sections by copy and paste. -->
+  <!-- ============ EDUCATION ============ -->
   <section id="education" class="wrap">
-    <div class="section-head">
-      <h2>Education</h2>
-      <span class="tag">RECORD 002</span>
-    </div>
-    <div class="ledger">
+    <details class="fold" id="fold-education">
+      <summary class="section-head">
+        <h2>e d u c a t i o n <span class="bracket">( 教育 )</span></h2>
+      <span class="tag">Record 002</span>
+        <span class="sign" aria-hidden="true"></span>
+      </summary>
+      <div class="fold__body">
+<div class="ledger">
 
       <div class="ledger-row">
-        <span class="code">WASHINGTON, DC</span>
+        <span class="code">Washington, DC</span>
         <div>
           <p class="role">M.S., Data Science &amp; Analytics</p>
           <p class="org">Georgetown University</p>
@@ -799,7 +772,7 @@
       </div>
 
       <div class="ledger-row">
-        <span class="code">STORRS, CT</span>
+        <span class="code">Storrs, CT</span>
         <div>
           <p class="role">B.S., Finance</p>
           <p class="org">University of Connecticut</p>
@@ -808,268 +781,466 @@
       </div>
 
     </div>
+      </div>
+    </details>
   </section>
 
   <hr class="divider">
 
-  <!-- ============ PROJECTS ============
-       Each project is one <div class="record"> block:
-         .file-no = the date on the left
-         <h3>     = the title (wrap in <a href="..."> to make it a link)
-         <p>      = the description
-         .stack   = the small brass tech-tags line
-         .visit   = the "Read more" link
-       Copy a whole block to add a project. Delete one to remove it. -->
+  <!-- ============ PROJECTS ============ -->
   <section id="projects" class="wrap">
-    <div class="section-head">
-      <h2>Projects</h2>
-      <span class="tag">RECORD 003</span>
-    </div>
-    <div class="records">
+    <details class="fold" id="fold-projects">
+      <summary class="section-head">
+        <h2>p r o j e c t s <span class="bracket">( 项目 )</span></h2>
+      <span class="tag">Record 003</span>
+        <span class="sign" aria-hidden="true"></span>
+      </summary>
+      <div class="fold__body">
+<div class="records">
 
       <div class="record">
-        <span class="file-no">DEC 2023</span>
+        <span class="file-no">Dec 2023</span>
         <div>
           <h3><a href="https://elliotzli.com/dsan5600-project-site/">Fed Funds Rate Impact Study</a></h3>
           <p>
-            An investigation to surface the broader dynamics behind rate policy and how fluctuations in the Fed Funds Rate ripple across
-            various sectors of the economy: the bond market, equities, exchange rates, inflation, and
+            An investigation to surface the broader dynamics behind rate policy and
+            how fluctuations in the Fed Funds Rate ripple across various sectors of
+            the economy: the bond market, equities, exchange rates, inflation, and
             unemployment.
           </p>
           <span class="stack">time series · R · Quarto</span>
-          <!-- <a class="visit" href="https://elliotzli.com/dsan5600-project-site/">Read more</a> -->
         </div>
       </div>
 
       <div class="record">
-        <span class="file-no">SEP 2023</span>
+        <span class="file-no">Sep 2023</span>
         <div>
           <h3><a href="https://elliotzli.com/fall-2023-reddit-project-team-35/">Reddit Big Data Analysis on Taylor Swift</a></h3>
           <p>
-            A big-data look at how a celebrity's popularity lives outside of streaming:
-            what fans actually discuss, how communities differ across platforms, and
-            which topics drive engagement.
+            A big-data look at how a celebrity's popularity lives outside of
+            streaming: what fans actually discuss, how communities differ across
+            platforms, and which topics drive engagement.
           </p>
           <span class="stack">spark · nlp · big data · cloud computing</span>
-          <!-- <a class="visit" href="https://elliotzli.com/fall-2023-reddit-project-team-35/">Read more</a> -->
         </div>
       </div>
 
       <div class="record">
-        <span class="file-no">APR 2023</span>
+        <span class="file-no">Apr 2023</span>
         <div>
           <h3><a href="https://elliotzli.com/spring2023-project-team-28/">How Are H-2 Visa Holders Impacting the US Economy?</a></h3>
           <p>
             An examination of the debate around working-visa holders in the local
-            economy and what the data actually shows, whether they fill skill gaps and contribute, or displace local
-            workers, and strain public services.
+            economy and what the data actually shows — whether they fill skill gaps
+            and contribute, or displace local workers and strain public services.
           </p>
           <span class="stack">python · data viz · Quarto</span>
-          <!-- <a class="visit" href="https://elliotzli.com/spring2023-project-team-28/">Read more</a> -->
         </div>
       </div>
 
       <div class="record">
-        <span class="file-no">ONGOING</span>
+        <span class="file-no">Ongoing</span>
         <div>
-          <h3>Independent Investment Research</h3>
+          <h3>Independent Investment Research</a></h3>
           <p>
-            Equity research across tech, semiconductors, software, and defense — building and
-            and revising theses, tracking earnings and catalysts, and testing range-based
-            trading strategies.
+            Equity research across tech, semiconductors, software, and defense —
+            building and revising theses, tracking earnings and catalysts, and
+            testing range-based trading strategies.
           </p>
           <span class="stack">equities · sector analysis</span>
         </div>
       </div>
 
     </div>
+      </div>
+    </details>
   </section>
 
-  <hr class="divider">
-
-  <!-- ============ EXPERIENCE ============
-       Each row: .code (left tag) | role/org/desc (middle) | .years (right) -->
-  <section id="experience" class="wrap">
-    <div class="section-head">
-      <h2>Experience</h2>
-      <span class="tag">RECORD 004</span>
+  <!-- ============ BAND ============
+       One inverted strip. Resist adding a second — the effect works
+       precisely because it happens once. -->
+  <div class="band">
+    <div class="wrap">
+      <span class="tag">life principle</span>
+      <p>I like work that has to be exactly right<span class="dot">.</span></p>
     </div>
-    <div class="ledger">
+  </div>
+
+  <!-- ============ EXPERIENCE ============ -->
+  <section id="experience" class="wrap">
+    <details class="fold" id="fold-experience">
+      <summary class="section-head">
+        <h2>e x p e r i e n c e <span class="bracket">( 经历 )</span></h2>
+      <span class="tag">Record 004</span>
+        <span class="sign" aria-hidden="true"></span>
+      </summary>
+      <div class="fold__body">
+<div class="ledger">
 
       <div class="ledger-row">
-        <span class="code">WORK</span>
+        <span class="code">Work</span>
         <div>
           <p class="role">Systems &amp; Data Analyst</p>
           <p class="org">Georgetown Law</p>
           <p class="desc">
-            Institutional reporting and process automation for the law school: 
-            Cognos analysis across graduation tracking, registration trends, financial aid compliance, 
-            and bar exam enrollment; Python automating delivery, reporting, and permissions for
-            the school&rsquo;s examination system without breaking grading anonymity; and Banner release testing plus dashboards 
-            that surface where processes stall.
+            Institutional reporting and process automation for the law school:
+            Cognos analysis across graduation tracking, registration trends,
+            financial aid compliance, and bar exam enrollment; Python automating
+            delivery, reporting, and permissions for the school's examination
+            system without breaking grading anonymity; and Banner release testing
+            plus dashboards that surface where processes stall.
           </p>
         </div>
         <span class="years">Current</span>
       </div>
 
       <div class="ledger-row">
-        <span class="code">PART-TIME</span>
+        <span class="code">Part-time</span>
         <div>
           <p class="role">Business Intelligence Engineer</p>
           <p class="org">Georgetown McDonough School of Business</p>
           <p class="desc">
-            Data infrastructure for the MBA career center: an employer record database,
-            a career search system linking student demographics to employer history, 
-            and benchmarking research across the top MBA programs.
+            Data infrastructure for the MBA career center: an employer record
+            database, a career search system linking student demographics to
+            employer history, and benchmarking research across the top MBA programs.
           </p>
         </div>
         <span class="years">Prior</span>
       </div>
 
       <div class="ledger-row">
-        <span class="code">INTERN</span>
+        <span class="code">Intern</span>
         <div>
           <p class="role">Equity Research Analyst</p>
-          <p class="org">GUOTAI JUNAN SECURITIES</p>
+          <p class="org">Guotai Junan Securities</p>
           <p class="desc">
             Transportation sector coverage for institutional clients, including
-            earnings forecasts, valuation work, and the annual report on
-            modeling transport emissions under China's carbon neutrality push.
+            earnings forecasts, valuation work, and the annual report on modeling
+            transport emissions under China's carbon neutrality push.
+            <a class="visit" href="https://www.fxbaogao.com/detail/2713056" target="_blank" rel="noopener">Read more</a>
           </p>
-
-          <span class="stack">
-          <a class="visit" href="https://www.fxbaogao.com/detail/2713056" target="_blank">Read more</a></span>
-          </div>
-        <!-- </div> -->
+        </div>
         <span class="years">Prior</span>
       </div>
 
     </div>
+      </div>
+    </details>
   </section>
 
   <hr class="divider">
 
-  <!-- ============ PERSONAL ============
-       Things I make outside of work. Same .record structure as Projects,
-       so you can copy a block from either section into the other. -->
+  <!-- ============ PERSONAL ============ -->
   <section id="personal" class="wrap">
-    <div class="section-head">
-      <h2>Personal</h2>
-      <span class="tag">RECORD 005</span>
-    </div>
-    <div class="records">
+    <details class="fold" id="fold-personal">
+      <summary class="section-head">
+        <h2>p e r s o n a l <span class="bracket">( 个人 )</span></h2>
+      <span class="tag">Record 005</span>
+        <span class="sign" aria-hidden="true"></span>
+      </summary>
+      <div class="fold__body">
+<div class="records">
 
       <div class="record">
-        <span class="file-no">SEP 2026</span>
+        <span class="file-no">Sep 2026</span>
         <div>
-          <h3><a href="https://elliotzli.com/elliotsrecipebook.html">Elliot&rsquo;s Recipe Book</a></h3>
+          <h3><a href="https://elliotzli.com/elliotsrecipebook.html">Elliot's Recipe Book</a></h3>
           <p>
-            The dishes I actually cook, written up in English and Chinese:
-            Sichuan and Wuhan staples, a few Thai recipes I&rsquo;m still adjusting,
-            and whatever else has earned a permanent place in the rotation.
+            The dishes I actually cook, written up in English and Chinese: Sichuan
+            and Wuhan staples, a few Thai recipes I'm still adjusting, and whatever
+            else has earned a permanent place in the rotation.
           </p>
-          <!--<span class="stack">cooking · 中文 &amp; english</span>
-           <a class="visit" href="https://elliotzli.com/elliots_recipe_book.html">Read more</a> -->
+          <span class="stack">中 · en</span>
         </div>
       </div>
 
     </div>
+      </div>
+    </details>
   </section>
-
-  <!-- ============ CONTACT SECTION (moved to the sidebar) ============
-       This whole block is switched off — contact now lives at the bottom
-       of the sidebar. To put it back in the main body, delete the comment
-       opener above and the closer at the end of this block, then add a
-       Contact link back into the CONTENTS nav in the sidebar.
-
-  <hr class="divider">
-
-  <section id="contact" class="wrap">
-    <div class="section-head">
-      <h2>Contact</h2>
-      <span class="tag">RECORD 004</span>
-    </div>
-    <div class="contact-row">
-      <a href="mailto:zl516@georgetown.edu">zl516@georgetown.edu</a>
-      <a href="https://www.linkedin.com/in/zhengze-li-90517b193/" target="_blank" rel="noopener">LinkedIn</a>
-      <a href="https://github.com/elliotzli" target="_blank" rel="noopener">GitHub</a>
-    </div>
-    <a class="resume-btn" href="resume.pdf">Download resume (PDF)</a>
-  </section>
-
-       ============================================================ -->
 
 </main>
 
+<!-- ============ PLAYER ============
+     TO CHANGE THE SONG: open the track in Spotify, "..." > Share >
+     Copy Song Link. You get open.spotify.com/track/XXXXXXXX — paste
+     the XXXXXXXX part into SPOTIFY_TRACK in the script at the bottom
+     of this file. -->
+<div class="player" id="player">
+  <div class="player__head">
+    <span class="tag">Now playing</span>
+    <button class="player__close" aria-label="Hide player">&#215;</button>
+  </div>
+  <div id="spotify-embed"></div>
+</div>
+
+<button class="player-recall" id="playerRecall" aria-label="Show player">&#9834;</button>
+
 <hr class="divider">
 
-<!-- ============ FOOTER ============
-     To hide the footer, wrap it in ONE comment: an opener before
-     <footer and a closer after </footer>. Never put a comment
-     inside another comment — HTML ends a comment at the first
-     closer it finds, so the rest of your markup leaks back onto
-     the page and things break in confusing ways. -->
 <footer class="wrap">
   <img src="pics/stamp.png" alt="">
-  <p>© <span id="year"></span> 李正赜</p>
+  <p class="tag">© <span id="year"></span> 李正赜</p>
 </footer>
 
-<!-- ============ SCRIPTS ============ -->
 <script>
-  /* --- 1. Current year in the footer ---
-     The "if" guard means the page won't error if you remove the footer. */
+  /* Current year, with a guard so removing the footer can't break the page */
   var yearEl = document.getElementById('year');
   if (yearEl) { yearEl.textContent = new Date().getFullYear(); }
 
-  /* --- 2. Mobile menu open/close ---
-     Adding the class "menu-open" to <body> is what slides the sidebar
-     in; the CSS rule body.menu-open .sidebar does the actual moving. */
+  /* ============================================================
+     SIDEBAR COLLAPSE (desktop)
+     One class on <body> drives everything; the CSS handles the
+     sliding and the reflow.
+     ============================================================ */
+  var navToggle = document.querySelector('.sidebar__toggle');
+
+  /* .no-anim is on <body> in the HTML. Removing it after the first
+     frame means a remembered "closed" sidebar is already closed when
+     the page paints, instead of visibly sliding shut on every load. */
+  requestAnimationFrame(function(){
+    requestAnimationFrame(function(){ document.body.classList.remove('no-anim'); });
+  });
+
+  function setNav(closed){
+    document.body.classList.toggle('nav-closed', closed);
+    if (navToggle) navToggle.setAttribute('aria-expanded', closed ? 'false' : 'true');
+  }
+
+  /* Remember the choice between visits. localStorage is per-browser and
+     stores a single string; wrapped in try/catch because it throws in
+     private-browsing modes on some browsers rather than failing quietly. */
+  try {
+    if (localStorage.getItem('nav') === 'closed') setNav(true);
+  } catch (e) {}
+
+  if (navToggle) {
+    navToggle.addEventListener('click', function(){
+      var closed = !document.body.classList.contains('nav-closed');
+      setNav(closed);
+      try { localStorage.setItem('nav', closed ? 'closed' : 'open'); } catch (e) {}
+    });
+  }
+
+  /* Mobile menu */
   var menuBtn = document.querySelector('.menu-btn');
   var overlay = document.querySelector('.overlay');
-
   function closeMenu(){
     document.body.classList.remove('menu-open');
     if (menuBtn) menuBtn.setAttribute('aria-expanded','false');
   }
-  if (menuBtn) {
-    menuBtn.addEventListener('click', function(){
-      var open = document.body.classList.toggle('menu-open');
-      menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
-    });
-  }
+  if (menuBtn) menuBtn.addEventListener('click', function(){
+    /* On desktop this button only exists when the sidebar is collapsed,
+       so its job there is to bring it back. On mobile it toggles the
+       slide-over menu as before. */
+    if (document.body.classList.contains('nav-closed')) {
+      setNav(false);
+      try { localStorage.setItem('nav', 'open'); } catch (e) {}
+      return;
+    }
+    var open = document.body.classList.toggle('menu-open');
+    menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
   if (overlay) overlay.addEventListener('click', closeMenu);
-
-  /* Close the menu after tapping a link, so you can see the section */
   document.querySelectorAll('.side-links a, .sidebar__stamp, .sidebar__name')
-    .forEach(function(link){ link.addEventListener('click', closeMenu); });
+    .forEach(function(l){ l.addEventListener('click', closeMenu); });
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closeMenu(); });
 
-  /* Close on the Escape key */
-  document.addEventListener('keydown', function(e){
-    if (e.key === 'Escape') closeMenu();
+  /* ============================================================
+     SMOOTH FOLD ANIMATION
+     ============================================================
+     A plain <details> element snaps open instantly — the browser
+     gives no way to transition it in CSS alone. So we take over the
+     click: we keep the element open the whole time and animate the
+     body's HEIGHT ourselves, from 0 to its natural height and back.
+
+     Height has to be animated in JavaScript because CSS can't
+     transition to "auto" — it needs a real number, and only JS can
+     measure what that number is.
+     ============================================================ */
+  var FOLD_MS = 340;                                   /* duration */
+  var FOLD_EASE = 'cubic-bezier(.25,.1,.25,1)';        /* gentle glide */
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  document.querySelectorAll('details.fold').forEach(function(fold){
+    var summary = fold.querySelector('summary');
+    var body    = fold.querySelector('.fold__body');
+    if (!summary || !body) return;
+
+    var anim = null;      /* the animation currently running, if any */
+    var closing = false;
+    var opening = false;
+
+    summary.addEventListener('click', function(e){
+      /* Stop the browser's instant open/close so we can do it ourselves */
+      e.preventDefault();
+
+      if (reduceMotion) { fold.open = !fold.open; return; }
+
+      if (closing || !fold.open) expand();
+      else if (opening || fold.open) collapse();
+    });
+
+    function expand(){
+      opening = true;
+      fold.open = true;                 /* open first so we can measure */
+      var startHeight = body.offsetHeight;   /* mid-animation if reversing */
+      var endHeight = body.scrollHeight;     /* natural full height */
+
+      if (anim) anim.cancel();
+      anim = body.animate(
+        { height: [startHeight + 'px', endHeight + 'px'], opacity: [0.35, 1] },
+        { duration: FOLD_MS, easing: FOLD_EASE }
+      );
+      anim.onfinish = function(){ finish(true); };
+      anim.oncancel = function(){ opening = false; };
+    }
+
+    function collapse(){
+      closing = true;
+      var startHeight = body.offsetHeight;
+
+      if (anim) anim.cancel();
+      anim = body.animate(
+        { height: [startHeight + 'px', '0px'], opacity: [1, 0] },
+        { duration: FOLD_MS, easing: FOLD_EASE }
+      );
+      anim.onfinish = function(){ finish(false); };
+      anim.oncancel = function(){ closing = false; };
+    }
+
+    function finish(isOpen){
+      fold.open = isOpen;
+      body.style.height = '';           /* hand height back to the browser */
+      anim = null;
+      closing = false;
+      opening = false;
+    }
   });
 
-  /* --- 3. Highlight the sidebar link for whatever section you're viewing ---
-     IntersectionObserver watches each section and reports when it
-     enters the middle band of the screen. Delete this whole block if
-     you'd rather the links never highlight. */
+  /* --- Open a folded section when you navigate to it ---
+     Without this, clicking "Projects" in the sidebar would scroll to a
+     closed row and look like nothing happened. This opens the target
+     first, then lets the browser scroll to it. It also handles someone
+     arriving at elliotzli.com/#projects directly from a shared link. */
+  function openTarget(hash){
+    if (!hash || hash === '#top') return;
+    var section = document.querySelector(hash);
+    if (!section) return;
+    var fold = section.querySelector('.fold');
+    /* Set .open directly rather than triggering a click — the section is
+       about to be scrolled to, and animating its height at the same time
+       would make the scroll land in the wrong place. */
+    if (fold && !fold.open) fold.open = true;
+  }
+
+  document.querySelectorAll('a[href^="#"]').forEach(function(link){
+    link.addEventListener('click', function(){
+      openTarget(link.getAttribute('href'));
+    });
+  });
+
+  /* Handle a link arriving with a hash already in the URL */
+  window.addEventListener('load', function(){
+    if (window.location.hash) {
+      openTarget(window.location.hash);
+      var el = document.querySelector(window.location.hash);
+      if (el) el.scrollIntoView();
+    }
+  });
+
+  /* Highlight the sidebar link for the section currently on screen */
   var navLinks = document.querySelectorAll('.side-links a');
   var sections = document.querySelectorAll('main section[id]');
-
   if ('IntersectionObserver' in window && sections.length) {
     var spy = new IntersectionObserver(function(entries){
       entries.forEach(function(entry){
         if (!entry.isIntersecting) return;
         navLinks.forEach(function(link){
-          link.classList.toggle(
-            'active',
-            link.getAttribute('href') === '#' + entry.target.id
-          );
+          link.classList.toggle('active', link.getAttribute('href') === '#' + entry.target.id);
         });
       });
     }, { rootMargin: '-45% 0px -50% 0px' });
-
-    sections.forEach(function(sec){ spy.observe(sec); });
+    sections.forEach(function(s){ spy.observe(s); });
   }
+</script>
+
+<!-- Spotify's player API. Free and public — no account or key needed
+     on your side. It loads asynchronously and calls the function below
+     when it's ready. -->
+<script src="https://open.spotify.com/embed/iframe-api/v1" async></script>
+<script>
+  /* ============================================================
+     MUSIC ON ARRIVAL
+     ============================================================
+     Change the track by pasting a new ID here. */
+  var SPOTIFY_TRACK = '0bzRslyclxD2CdNdstm1zR';
+
+  /* IMPORTANT — READ THIS BEFORE TWEAKING ANYTHING BELOW.
+
+     Browsers do NOT allow a page to start audio by itself. Chrome,
+     Safari and Firefox all block it, and there is no workaround; it
+     exists because pages that blast sound at you are genuinely awful
+     to land on, especially at work or in a library.
+
+     What IS allowed is starting audio after the visitor's first
+     interaction with the page — a click, a key, a scroll. So that is
+     what this does: the moment they touch anything, the track begins.
+     For most people that lands within a second or two of arriving,
+     which is about as close to "plays on open" as the web permits.
+
+     Two consequences worth knowing:
+       1. A visitor who lands and reads without touching anything
+          hears nothing. That is correct behaviour, not a bug.
+       2. Spotify plays the full track only for listeners signed into
+          Spotify. Everyone else gets a 30-second preview. To play a
+          full song for everyone you would need to host your own audio
+          file and use an <audio> tag, which means holding the rights
+          to that recording.
+     ============================================================ */
+
+  var spotifyController = null;
+  var hasStarted = false;
+
+  window.onSpotifyIframeApiReady = function(IFrameAPI){
+    IFrameAPI.createController(
+      document.getElementById('spotify-embed'),
+      { uri: 'spotify:track:' + SPOTIFY_TRACK, width: '100%', height: '152' },
+      function(controller){ spotifyController = controller; }
+    );
+  };
+
+  /* Fire once, on whatever the visitor touches first. */
+  function startMusic(){
+    if (hasStarted || !spotifyController) return;
+    hasStarted = true;
+    spotifyController.play();
+    removeStartListeners();
+  }
+  var startEvents = ['pointerdown', 'keydown', 'wheel', 'touchstart'];
+  function removeStartListeners(){
+    startEvents.forEach(function(ev){
+      document.removeEventListener(ev, startMusic);
+    });
+  }
+  startEvents.forEach(function(ev){
+    document.addEventListener(ev, startMusic, { passive: true });
+  });
+
+  /* Hide / bring back the panel. Hiding does not stop playback —
+     use the pause control inside the player for that. */
+  var playerEl = document.getElementById('player');
+  var recallEl = document.getElementById('playerRecall');
+  var closeEl  = playerEl ? playerEl.querySelector('.player__close') : null;
+
+  if (closeEl) closeEl.addEventListener('click', function(){
+    playerEl.classList.add('is-hidden');
+    if (recallEl) recallEl.classList.add('is-shown');
+  });
+  if (recallEl) recallEl.addEventListener('click', function(){
+    playerEl.classList.remove('is-hidden');
+    recallEl.classList.remove('is-shown');
+  });
 </script>
 
 </body>
