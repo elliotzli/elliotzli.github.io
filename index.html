@@ -63,8 +63,8 @@
        --dot-gap   : distance between dots. Smaller = denser.
        --dot-size  : radius of each dot. Above ~1.2px it gets noisy. */
     --dot-color:#dedede;
-    --dot-gap:11px;
-    --dot-size:1px;
+    --dot-gap:20px;
+    --dot-size:1.2px;
     /* Same idea for the dots on the black band, which need to be
        light instead of dark to show up. */
     --dot-color-dark:rgba(255,255,255,0.14);
@@ -199,7 +199,8 @@
   }
   .sidebar__label{padding:0 22px; margin:30px 0 10px;}
 
-  .side-links{display:flex; flex-direction:column;}
+  /* Extra top margin stands in for the removed CONTENTS label. */
+  .side-links{display:flex; flex-direction:column; margin-top:26px;}
   .side-links a{
     display:flex; align-items:baseline; gap:12px;
     padding:8px 22px; font-size:var(--fs-small); color:var(--black);
@@ -216,11 +217,11 @@
   .side-links a.active{font-weight:600;}
   .side-links a.active .num{color:var(--red);}
 
+  /* No rule above this block. margin-top:auto already pushes it to the
+     bottom of the sidebar, and that gap is separation enough. */
   .sidebar__foot{
-    margin-top:auto; padding:18px 22px 0;
-    /* Slightly stronger than --rule, because a hairline that reads
-       clearly on the light page gets lost on the darker panel. */
-    border-top:1px solid #cfcfcf; display:flex; flex-direction:column;
+    margin-top:auto; padding:24px 22px 0;
+    display:flex; flex-direction:column;
   }
   .sidebar__foot .sidebar__label{padding:0; margin:0 0 10px;}
   .side-contact{display:flex; flex-direction:column;}
@@ -304,7 +305,11 @@
      ========================================================== */
   .hero{
     padding-top:var(--section-gap);
-    padding-bottom:calc(var(--section-gap) / 2);
+    /* Zero on purpose. The band below owns the entire gap between
+       itself and the hero, through --band-space. Splitting that gap
+       across two elements is what made the space above and below the
+       band unequal. */
+    padding-bottom:0;
     position:relative;
   }
   /* A denser patch of dots in the hero corner. Because the whole page
@@ -411,6 +416,10 @@
     padding-top:calc(var(--section-gap) / 2);
     padding-bottom:calc(var(--section-gap) / 2);
   }
+  /* The section directly after the band contributes nothing on top —
+     the band's margin-bottom is the whole gap. Without this, the two
+     would stack and the space below the band would grow again. */
+  .band + section{padding-top:0 !important;}
   /* A collapsed section is just a title row, so it needs far less
      padding than an open one — otherwise the folded page is mostly
      empty space. :has() checks the section's own state. */
@@ -544,19 +553,24 @@
     background-color:var(--black); color:var(--paper);
     background-image:radial-gradient(var(--dot-color-dark) var(--dot-size), transparent var(--dot-size));
     background-size:var(--dot-gap) var(--dot-gap);
-    margin-top:calc(var(--section-gap) / 2);
-    padding-top:clamp(56px, 8vw, 96px);
-    padding-bottom:clamp(56px, 8vw, 96px);
+    /* One value used on BOTH sides, so the gap above and below is
+       identical by construction rather than by two numbers that
+       happen to match. 0.75 is the average of what the two gaps
+       used to be. */
+    --band-space:calc(var(--section-gap) * 0.75);
+    margin-top:var(--band-space);
+    margin-bottom:var(--band-space);
+    /* HEIGHT DIAL — vertical padding only. Left and right come from
+       the .band-holder wrapper, so changing these cannot affect the
+       band's width or its alignment. */
+    padding:clamp(28px, 3.6vw, 46px) clamp(26px, 3vw, 44px);
     position:relative; overflow:hidden;
   }
-  /* On desktop the page body is already pushed in from the left by
-     --left-extra, but the band ran all the way to the right edge of the
-     window — so it looked pinned to the right rather than placed on the
-     page. Matching that inset on the right makes it read as a block
-     floating on the dot field, with the same margin on both sides. */
-  @media (min-width:900px){
-    .band{margin-right:var(--left-extra);}
-  }
+  /* The wrapper carries the same max-width and gutter as every other
+     section, so the band's black edges start and end exactly where the
+     card grid does. The margin-top/bottom live on .band itself; the
+     holder adds nothing vertically. */
+  .band-holder{padding-top:0; padding-bottom:0;}
   .band::after{
     content:"";
     position:absolute; right:-40px; bottom:-40px;
@@ -568,7 +582,17 @@
   .band p{
     font-family:var(--display); font-weight:400;
     font-size:clamp(1.4rem, 3.6vw, 2.4rem);
-    line-height:1.35; margin:0; max-width:22ch; position:relative;
+    line-height:1.35; margin:0; position:relative;
+    /* No max-width. The old 22ch was forcing a break at roughly half
+       the sentence no matter how much room there was. Without it the
+       line runs as far as the band allows — one line on a normal
+       screen — and wraps by itself when the window is too narrow.
+       That is just how text behaves; no media query needed.
+
+       text-wrap:balance only matters on the narrow screens where it
+       does wrap: it splits the two lines to near-equal length rather
+       than stranding one word on line two. */
+    text-wrap:balance;
   }
   .band .tag{color:rgba(244,244,244,0.55); display:block; margin-bottom:22px;}
 
@@ -647,7 +671,12 @@
   }
 </style>
 </head>
-<body class="no-anim">
+<!-- nav-closed is set here so the sidebar starts CLOSED on every
+     visit. The script below removes it only if this browser has a
+     saved preference of "open". Putting the default in the HTML rather
+     than in JavaScript means the page paints closed from the first
+     frame instead of flashing open and then collapsing. -->
+<body class="no-anim nav-closed">
 
 <button class="menu-btn" aria-label="Open menu" aria-expanded="false"><span></span></button>
 <div class="overlay"></div>
@@ -666,8 +695,6 @@
     elliot<br>( li )
   </a>
 
-  <div class="sidebar__label tag">Contents</div>
-
   <nav class="side-links">
     <a href="#about"><span class="num">001</span>About 关.   于</a>
     <a href="#education"><span class="num">002</span>Education 教.   育</a>
@@ -677,7 +704,6 @@
   </nav>
 
   <div class="sidebar__foot">
-    <div class="sidebar__label tag">Contact</div>
     <div class="side-contact">
       <a href="mailto:zl516@georgetown.edu" aria-label="Email">
         <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="4.5" width="19" height="15" rx="1.5"/><path d="M3 6l9 6.5L21 6"/></svg>
@@ -714,7 +740,18 @@
     </div>
   </section>
 
-  <hr class="divider">
+  <!-- ============ BAND ============
+       One inverted strip. Resist adding a second — the effect works
+       precisely because it happens once. -->
+  <!-- The band sits INSIDE a .wrap, exactly like every section does.
+       That is what makes its left and right edges line up with the
+       cards: they are all measured from the same container. -->
+  <div class="wrap band-holder">
+    <div class="band">
+      <span class="tag">life principle</span>
+      <p>侘び寂び<span class="dot">.</span></p>
+    </div>
+  </div>
 
   <!-- ============ ABOUT ============ -->
   <section id="about" class="wrap">
@@ -882,15 +919,7 @@
     </details>
   </section>
 
-  <!-- ============ BAND ============
-       One inverted strip. Resist adding a second — the effect works
-       precisely because it happens once. -->
-  <div class="band">
-    <div class="wrap">
-      <span class="tag">life principle</span>
-      <p>I like work that has to be exactly right<span class="dot">.</span></p>
-    </div>
-  </div>
+  <hr class="divider">
 
   <!-- ============ EXPERIENCE ============ -->
   <section id="experience" class="wrap">
@@ -1036,8 +1065,10 @@
   /* Remember the choice between visits. localStorage is per-browser and
      stores a single string; wrapped in try/catch because it throws in
      private-browsing modes on some browsers rather than failing quietly. */
+  /* The sidebar defaults to closed (the class is already on <body>).
+     Only a stored preference of "open" reopens it. */
   try {
-    if (localStorage.getItem('nav') === 'closed') setNav(true);
+    if (localStorage.getItem('nav') === 'open') setNav(false);
   } catch (e) {}
 
   if (navToggle) {
