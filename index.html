@@ -489,8 +489,28 @@
     margin:0 0 6px; color:var(--black);
   }
   .record h3{margin-bottom:10px;}
-  .record h3 a{text-decoration:none; transition:color .15s ease;}
-  .record h3 a:hover{color:var(--red);}
+  /* Linked titles are underlined so it's obvious they're clickable.
+     Colour alone isn't enough — it fails for colourblind readers and
+     for anyone who hasn't yet learned that red means "link" on this
+     particular page. An underline is the one link signal everyone
+     already knows.
+
+     text-underline-offset pushes the line clear of the descenders in
+     the dot-matrix face; text-decoration-thickness keeps it a hairline
+     so it matches the rest of the page's rules rather than shouting. */
+  .record h3 a,
+  .ledger-row .role a{
+    text-decoration:underline;
+    text-decoration-thickness:1px;
+    text-underline-offset:4px;
+    text-decoration-color:var(--grey);
+    transition:color .15s ease, text-decoration-color .15s ease;
+  }
+  .record h3 a:hover,
+  .ledger-row .role a:hover{
+    color:var(--red);
+    text-decoration-color:var(--red);
+  }
 
   .ledger-row .org{font-size:var(--fs-small); color:var(--grey); margin:0 0 14px;}
   .ledger-row .desc,.record p{
@@ -501,11 +521,17 @@
   }
   .record .visit,.ledger-row .visit{
     font-family:var(--mono); font-size:var(--fs-micro); letter-spacing:0.06em;
-    color:var(--black); text-decoration:none;
-    border-bottom:1px solid var(--black); margin-left:16px;
-    transition:color .15s ease, border-color .15s ease;
+    color:var(--black);
+    text-decoration:underline;
+    text-decoration-thickness:1px;
+    text-underline-offset:4px;
+    text-decoration-color:var(--black);
+    margin-left:16px;
+    transition:color .15s ease, text-decoration-color .15s ease;
   }
-  .record .visit:hover,.ledger-row .visit:hover{color:var(--red); border-color:var(--red);}
+  .record .visit:hover,.ledger-row .visit:hover{
+    color:var(--red); text-decoration-color:var(--red);
+  }
 
   /* ==========================================================
      7. INVERTED BAND
@@ -643,11 +669,11 @@
   <div class="sidebar__label tag">Contents</div>
 
   <nav class="side-links">
-    <a href="#about"><span class="num">001</span>About 关  于</a>
-    <a href="#education"><span class="num">002</span>Education 教  育</a>
-    <a href="#projects"><span class="num">003</span>Projects 计  划</a>
-    <a href="#experience"><span class="num">004</span>Experience 经  历</a>
-    <a href="#personal"><span class="num">005</span>Personal 个  人</a>
+    <a href="#about"><span class="num">001</span>About 关.   于</a>
+    <a href="#education"><span class="num">002</span>Education 教.   育</a>
+    <a href="#projects"><span class="num">003</span>Projects 计.   划</a>
+    <a href="#experience"><span class="num">004</span>Experience 经.   历</a>
+    <a href="#personal"><span class="num">005</span>Personal 个.   人</a>
   </nav>
 
   <div class="sidebar__foot">
