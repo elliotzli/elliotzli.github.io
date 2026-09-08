@@ -1,120 +1,1026 @@
 <!DOCTYPE html>
-<html>
-<img src="lighthouse.jpg" alt="Nature" style="width:100%">
+<!--
+  ============================================================
+  ELLIOT LI — PERSONAL WEBSITE
+  ============================================================
+  This is a single-file website. Everything lives here:
+    - The <head> section  = setup (title, fonts, settings)
+    - The <style> section = all the visual design (CSS)
+    - The <body> section  = the actual content you see (HTML)
+
+  TO EDIT: open this file in any text editor, change the words
+  between the tags, save, then upload to GitHub.
+
+  Files this page expects in the SAME folder:
+    stamp.png       (your seal — top left, footer, browser tab)
+    lighthouse.jpg  (the wide photo band)
+    resume.pdf      (the download button — optional)
+  ============================================================
+-->
+<html lang="en">
 <head>
-<title>Elliot Li's Personal Website</title>
+
+<!-- Character encoding. Required for Chinese characters to display. Never remove. -->
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<script src="https://cdn.apple-mapkit.com/mk/5.x.x/mapkit.js"></script>
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+
+<!-- THIS LINE IS WHAT MAKES THE SITE WORK ON PHONES.
+     It tells a phone: "use your real screen width, don't pretend to be a desktop."
+     Without it, phones zoom out and everything looks tiny. -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Text shown in the browser tab and in Google search results -->
+<title>Elliot Li's Personal Website</title>
+
+<!-- The gray description line under your link in Google results.
+     Worth keeping: without it, Google invents its own summary from
+     random page text. Edit the wording to whatever you prefer. -->
+<meta name="description" content="Elliot Li — Systems and Data Analyst at Georgetown Law. Projects in data workflows, time series analysis, and quantitative research.">
+
+<!-- The little icon in the browser tab. Uses your stamp. -->
+<link rel="icon" href="pics/stamp.png">
+
+<!-- Loads fonts from Google. The three families are named in the URL:
+     Source Serif 4 (headlines), Inter (body text), IBM Plex Mono (small data labels).
+     To swap a font, change the name here AND in the --serif/--sans/--mono lines below. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
 <style>
-body,h1,h2,h3,h4,h5 {font-family: "Arial", sans-serif}
-#map {height: 100px;}
-.w3-content {max-width: 1000px; margin: 0 auto;} /* Center the content */
-.w3-row {display: flex; flex-wrap: wrap; justify-content: center;} /* Center the row */
-.w3-col {width: 100%; margin-bottom: 20px;} /* Flex properties for columns */
-@media (max-width: 1200px) {
-  .w3-col {flex: 1 1 100%;} /* Full width on smaller screens */
+  /* ==========================================================
+     1. DESIGN TOKENS
+     These are named values reused everywhere below.
+     Change a color here and it updates across the WHOLE page.
+     ========================================================== */
+  :root{
+    --ink:#10151f;        /* main body text (near-black) */
+    --navy:#10151f;       /* headings and links */
+    --paper:#edeff2;      /* page background (cool light gray) */
+    --paper-2:#e3e6ea;    /* slightly darker gray, used in the About box */
+    --slate:#50565e;      /* secondary / muted text */
+    --brass:#a8793f;      /* accent color: hover states, small labels */
+    --brass-dim:#c79a5f;  /* lighter accent, used for underlines */
+    --line:#c7ccd1;       /* the strong full-width section dividers */
+    --line-soft:#dde0e4;  /* the lighter rules BETWEEN rows inside a section */
+
+    --serif:'IBM Plex Mono', 'Courier New', monospace;
+    --sans:'IBM Plex Mono', 'Courier New', monospace;
+    --mono:'IBM Plex Mono', 'Courier New', monospace;
+
+    /* Breathing room below the footer, at the very bottom of the page.
+       (The hero's top spacing now uses --section-gap instead, so that
+       it matches the gap before the About section.)
+       clamp(min, preferred, max) = "never smaller than 40px,
+       never bigger than 60px, otherwise scale with screen width." */
+    --edge-space:clamp(40px, 20vw, 60px);
+
+    /* ---- SPACING DIALS ----
+       These three control how airy the page feels.
+       Turn a number UP for more space, DOWN for tighter.
+       --section-gap : the TOTAL gap between any two blocks — hero to
+                       About, About to Projects, Contact to footer.
+                       Every boundary uses this same value, so the
+                       rhythm is identical all the way down the page.
+       --row-space   : space inside each project / experience row
+       --head-gap    : space under each section title (About, Projects...) */
+    --section-gap:clamp(40px, 9vw, 60px);
+    --row-space:clamp(20px, 3.4vw, 30px);
+    --head-gap:clamp(20px, 4.5vw, 30px);
+
+    /* Extra space ABOVE each divider line, on top of the section gap.
+       Turn this up if the rules feel too close to the content above them. */
+    /* Extra space ABOVE each divider line, on top of the section gap.
+       WARNING: any value other than 0 makes the gap above a divider
+       larger than the gap below it. Keep this at 0 if you want the
+       line to sit exactly centered between sections. */
+    --divider-lead:0px;
+
+    /* Width of the left sidebar on desktop. The page content is
+       pushed over by exactly this much. */
+    --sidebar-w:228px;
+
+    /* ---- CONTENT GUTTERS ----
+       --gutter      : side padding inside the text column (both edges)
+       --left-extra  : ONE dial that shifts the ENTIRE main body right,
+                       away from the sidebar — headings, text, the
+                       horizontal rules, and the footer alike.
+                       Desktop only; has no effect on phones.
+       Raise --left-extra until the left gap looks equal to the right. */
+    --gutter:clamp(20px, 4vw, 56px);
+    --left-extra:48px;
+
+    /* ---- TEXT SIZES ----
+       --body-text : the main prose — About paragraphs, project and
+                     job descriptions. Sits between the page default
+                     and the small mono labels.
+       The small labels (file numbers, tech tags, dates) stay at 12–13px
+       and are set individually, so this dial won't shrink them. */
+    --body-text:0.88rem;
+  }
+
+  /* Makes padding count INSIDE an element's width instead of adding to it.
+     Prevents boxes overflowing on small screens. Standard practice. */
+  *{box-sizing:border-box;}
+
+  /* Smooth animated scrolling when you click a nav link */
+  html{scroll-behavior:smooth;}
+
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--sans);
+    /* Body text grows slightly on bigger screens.
+       NOTE: the middle value must land BETWEEN the min and max for
+       clamp to actually scale. Your previous middle value (0.55vw + 14.5px)
+       was always above 14px, so the text was locked at 14px everywhere.
+       This version genuinely scales from ~13.5px to 15px. */
+    font-size:clamp(13.5px, 0.25vw + 12.5px, 15px);
+    /* Monospace is denser than a proportional font, so it needs more
+       line spacing than the usual 1.5–1.6 to stay comfortable. */
+    line-height:1.75;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  a{color:var(--navy); text-decoration-color:var(--brass-dim); text-underline-offset:3px;}
+  a:hover{color:var(--brass);}
+  /* Visible outline when tabbing with a keyboard — accessibility requirement */
+  a:focus-visible, button:focus-visible{outline:2px solid var(--brass); outline-offset:3px;}
+
+  /* ==========================================================
+     2. THE FLUID CONTAINER  ← this is what makes the site adapt
+     ==========================================================
+     .wrap is the invisible box that holds each section's content.
+
+     width:100%          → always fills whatever space is available
+     max-width:clamp(...) → the cap GROWS with the screen instead of
+                            being one fixed number. On a phone it's
+                            tiny, on a 27" monitor it's ~1180px wide.
+     padding:clamp(...)   → side margins also scale: 20px on a phone,
+                            up to 56px on a big screen.
+     margin:0 auto        → centers the box horizontally.
+
+     Nothing here is a fixed pixel width, so the layout reflows
+     continuously at every screen size rather than jumping.
+     ---------------------------------------------------------- */
+  /* NOTE: max-width is a plain number (not vw-based) because the
+     sidebar shifts this content sideways. A vw value measures the
+     WHOLE window, which would push content off the right edge.
+
+     This sets the padding INSIDE the text column. The gap between
+     the sidebar and the whole page is handled separately by
+     --left-extra, applied to <body> in the desktop block below. */
+  .wrap{
+    width:100%;
+    max-width:1180px;
+    margin:0 auto;
+    padding-left:var(--gutter);
+    padding-right:var(--gutter);
+  }
+
+  /* Paragraph text still gets a reading-width cap. This is deliberate:
+     lines longer than ~75 characters are genuinely harder to read.
+     The 'ch' unit means "width of that many characters." */
+  .measure{max-width:68ch;}
+
+  /* ==========================================================
+     3. LEFT SIDEBAR NAVIGATION
+     ==========================================================
+     How it works:
+       - On screens 900px and wider: the sidebar is permanently
+         visible on the left, and the page body is pushed over by
+         --sidebar-w so nothing sits underneath it.
+       - Below 900px: the sidebar slides off-screen and a small
+         menu button appears in the top-left. Tapping it adds the
+         class "menu-open" to <body>, which slides the sidebar in.
+     ========================================================== */
+
+  /* --- The hamburger button (mobile only) --- */
+  .menu-btn{
+    position:fixed; top:14px; left:14px; z-index:70;
+    width:44px; height:44px;
+    display:flex; align-items:center; justify-content:center;
+    background:var(--paper); border:1px solid var(--line);
+    cursor:pointer; padding:0;
+  }
+  /* Three stacked bars, drawn with one element plus two pseudo-elements */
+  .menu-btn span,
+  .menu-btn span::before,
+  .menu-btn span::after{
+    display:block; width:18px; height:1.5px; background:var(--ink);
+  }
+  .menu-btn span{position:relative;}
+  .menu-btn span::before,
+  .menu-btn span::after{content:""; position:absolute; left:0;}
+  .menu-btn span::before{top:-6px;}
+  .menu-btn span::after{top:6px;}
+
+  /* --- Dark screen behind the sidebar when open on mobile --- */
+  .overlay{
+    position:fixed; inset:0; background:rgba(16,21,31,0.4);
+    z-index:58; opacity:0; visibility:hidden; transition:opacity .2s ease;
+  }
+
+  /* --- The sidebar itself --- */
+  .sidebar{
+    position:fixed; top:0; left:0;
+    width:var(--sidebar-w); height:100vh;
+    background:var(--paper-2);
+    border-right:1px solid var(--line);
+    z-index:60;
+    display:flex; flex-direction:column;
+    padding:30px 0 28px;
+    overflow-y:auto;
+    transform:translateX(-100%);        /* hidden off-screen by default */
+    transition:transform .25s ease;
+  }
+  .sidebar__stamp{display:block; width:46px; height:46px; margin:0 24px 22px;}
+  .sidebar__stamp img{display:block; width:100%; height:100%;}
+  .sidebar__name{
+    font-family:var(--serif); font-size:15px; font-weight:600;
+    color:var(--ink); text-decoration:none; padding:0 24px; line-height:1.4;
+  }
+  .sidebar__name .zh{display:block; font-size:13px; color:var(--slate); font-weight:400; margin-top:3px;}
+  .sidebar__label{
+    font-size:11px; letter-spacing:0.12em; color:var(--slate);
+    padding:0 24px; margin:26px 0 10px;
+  }
+
+  .side-links{display:flex; flex-direction:column;}
+  .side-links a{
+    display:flex; align-items:baseline; gap:10px;
+    padding:9px 24px;
+    font-size:14px; color:var(--slate); text-decoration:none;
+    border-left:2px solid transparent;
+    transition:color .15s ease, background .15s ease, border-color .15s ease;
+  }
+  .side-links a .num{font-size:11px; color:var(--brass); flex-shrink:0;}
+  .side-links a:hover{color:var(--ink); background:rgba(16,21,31,0.035);}
+  /* .active is added by the script at the bottom as you scroll */
+  .side-links a.active{
+    color:var(--ink); border-left-color:var(--brass);
+    background:rgba(16,21,31,0.05);
+  }
+
+  /* ==========================================================
+     SIDEBAR FOOTER — the CONTACT block
+     margin-top:auto is what pushes this to the bottom of the
+     sidebar, no matter how many nav links are above it.
+     ========================================================== */
+  .sidebar__foot{
+    margin-top:auto;
+    padding:20px 24px 0;
+    border-top:1px solid var(--line);
+    display:flex; flex-direction:column;
+  }
+  /* The "CONTACT" heading. Uses the same look as "CONTENTS" above,
+     but without that rule's outer padding, since .sidebar__foot
+     already supplies it. */
+  .sidebar__foot .sidebar__label{
+    padding:0;
+    margin:0 0 12px;
+  }
+  /* Contact links show an icon plus a short label. The icons are inline
+     SVG in the HTML below — no icon font or external file to load.
+     currentColor makes each icon inherit the link's text color, so it
+     changes on hover automatically. */
+  .side-contact{display:flex; flex-direction:column; gap:2px;}
+  .side-contact a{
+    display:flex; align-items:center; gap:10px;
+    padding:6px 0;
+    font-size:13px; color:var(--slate); text-decoration:none;
+    transition:color .15s ease;
+  }
+  .side-contact a svg{
+    width:15px; height:15px; flex-shrink:0;
+    stroke:currentColor; fill:none;
+    stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round;
+  }
+  .side-contact a:hover{color:var(--brass);}
+
+  /* Small résumé download button, sized for the sidebar */
+  .side-resume{
+    display:block; text-align:center;
+    margin-top:16px; padding:9px 10px;
+    font-family:var(--mono); font-size:12px;
+    color:var(--paper); background:var(--navy);
+    border:1px solid var(--navy); text-decoration:none;
+    transition:background .15s ease, border-color .15s ease;
+  }
+  .side-resume:hover{background:var(--brass); border-color:var(--brass); color:var(--paper);}
+
+  /* --- Open state on mobile --- */
+  body.menu-open .sidebar{transform:translateX(0);}
+  body.menu-open .overlay{opacity:1; visibility:visible;}
+
+  /* --- Desktop: sidebar always visible, content shifted over --- */
+  @media (min-width:900px){
+    /* margin-left  = clears the fixed sidebar
+       padding-left = the extra breathing room, applied to the WHOLE
+                      page body, so dividers and the footer shift too
+                      (they sit outside .wrap and would otherwise stay
+                      flush against the sidebar). */
+    body{
+      margin-left:var(--sidebar-w);
+      padding-left:var(--left-extra);
+    }
+    .sidebar{transform:none;}
+    .menu-btn,.overlay{display:none;}
+  }
+
+  /* ==========================================================
+     4. HERO (the big name area at the top)
+     ========================================================== */
+  /* IMPORTANT: only the TOP and BOTTOM are set here.
+     The old version used the shorthand `padding: var(--edge-space) 0`,
+     which also set left/right padding to 0 — overriding the padding
+     .wrap gives every other section. That is why the hero sat further
+     left than "About", "Projects", etc.
+     Setting only padding-top / padding-bottom leaves .wrap's
+     horizontal padding intact, so everything lines up.
+
+     SPACING: the bottom is half of --section-gap, exactly like every
+     other section, so the About section below adds the other half and
+     the hero → About gap equals every section-to-section gap.
+     The top gets a FULL --section-gap because there is nothing above
+     it to contribute the other half — the page just starts there. */
+  .hero{
+    padding-top:var(--section-gap);
+    padding-bottom:calc(var(--section-gap) / 2);
+  }
+  .hero .kicker{font-family:var(--mono); font-size:13px; color:var(--brass); margin:0 0 18px;}
+  .hero h1{
+    font-family:var(--serif); font-weight:500;
+    /* Headline scales smoothly between 2.1rem and 3.6rem based on screen width */
+    font-size:clamp(2.1rem, 5.5vw, 3.6rem);
+    line-height:1.12; margin:0; color:var(--navy);
+  }
+  .hero h1 .zh{
+    display:block; font-size:0.5em; color:var(--slate);
+    font-weight:400; margin-top:10px; letter-spacing:0.08em;
+  }
+  .hero .lede{font-size:1.13rem; margin:26px 0 32px;}
+  .hero .lede em{font-style:normal; color:var(--navy); border-bottom:1px solid var(--brass-dim);}
+  .hero-meta{
+    display:flex; flex-wrap:wrap; gap:8px 22px;
+    font-family:var(--mono); font-size:13px; color:var(--slate);
+  }
+
+  /* Fade-up animation on page load. .reveal is added to elements in the HTML below. */
+  .reveal{opacity:0; transform:translateY(10px); animation:up 0.7s ease forwards;}
+  .reveal:nth-child(2){animation-delay:0.08s;}
+  .reveal:nth-child(3){animation-delay:0.16s;}
+  .reveal:nth-child(4){animation-delay:0.24s;}
+  @keyframes up{to{opacity:1; transform:none;}}
+  /* Respects the OS setting for people who get motion sickness from animations */
+  @media (prefers-reduced-motion: reduce){
+    .reveal{animation:none; opacity:1; transform:none;}
+    html{scroll-behavior:auto;}
+  }
+
+  /* ==========================================================
+     5. LIGHTHOUSE PHOTO BAND
+     object-fit:cover = crop to fill the space without squashing.
+     Height scales with the screen instead of being fixed.
+     ========================================================== */
+  /*.banner{
+    width:100%;
+    height:clamp(160px, 30vw, 340px);
+    object-fit:cover;
+    display:block;
+    border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line);
+  } */
+  /* ========================================================== */
+
+  /* ==========================================================
+     6. SECTION DIVIDERS  ← your request #2
+     ==========================================================
+     Every section gets:
+       - a full-width horizontal rule above it (.divider)
+       - a small brass tick mark, so the break reads as intentional
+     To remove a divider, just delete its <hr class="divider"> line
+     in the HTML below.
+     ---------------------------------------------------------- */
+  .divider{
+    border:0;
+    height:0px;
+    background:var(--line);
+    /* Extra air above the line, on top of the section padding.
+       Controlled by --divider-lead near the top of this file. */
+    margin:var(--divider-lead) 0 0;
+    position:relative;
+  }
+  /* The short brass segment sitting on top of the gray line */
+  .divider::before{
+    content:"";
+    position:absolute;
+    left:0; top:0;
+    width:64px; height:1px;
+    background:var(--brass);
+  }
+
+  /* Space above and below every section. Controlled by --section-gap.
+     Because the gap ABOVE a divider (this section's padding-bottom)
+     and the gap BELOW it (the next section's padding-top) both come
+     from this one value, the divider always sits exactly halfway
+     between the content above and below it. */
+  /* Space between blocks.
+     IMPORTANT: each section contributes HALF the gap (its own bottom
+     padding) and the next section contributes the other half (its top
+     padding). Together they add up to exactly one --section-gap.
+     That is why this is divided by 2 — otherwise every boundary
+     between two sections would be double the size of any gap that
+     only has one section next to it (like hero → About). */
+  section{
+    padding-top:calc(var(--section-gap) / 2);
+    padding-bottom:calc(var(--section-gap) / 2);
+  }
+
+  /* The rule under each section title has been removed.
+     To bring it back, add: border-bottom:1px solid var(--line); */
+  .section-head{
+    display:flex; align-items:baseline; justify-content:space-between;
+    margin-bottom:var(--head-gap);
+    gap:16px; flex-wrap:wrap;
+  }
+  .section-head h2{
+    font-family:var(--serif); font-weight:500;
+    font-size:clamp(1rem, 2.4vw, 1.5rem);
+    /* line-height MUST be tight here. The page default of 1.75 adds
+       invisible space above and below the text ("leading"), which made
+       the gap under a divider look bigger than the gap above it even
+       though the padding was identical. 1.1 removes almost all of it. */
+    line-height:1.1;
+    margin:0; color:var(--navy);
+  }
+  .section-head .tag{font-family:var(--mono); font-size:12px; color:var(--slate);}
+
+  /* ==========================================================
+     7. ABOUT SECTION
+     grid-template-columns: 220px 1fr = fixed sidebar + flexible rest.
+     The @media rule at the bottom stacks these on narrow screens.
+     ========================================================== */
+  .about-grid{
+  display:grid;
+  grid-template-columns:minmax(180px, 240px) 1fr;
+  gap:clamp(24px, 4vw, 52px);
+  border-top:1px solid var(--line);
+  padding-top:var(--row-space);
 }
+  .about-card{
+    border:1px solid var(--line); background:var(--paper-2);
+    padding:26px 24px; font-family:var(--mono); font-size:13px; color:var(--slate);
+    align-self:start;
+  }
+  .about-card dl{margin:0;}
+  .about-card dt{color:var(--ink); font-weight:500; margin-top:20px;}
+  .about-card dt:first-child{margin-top:0;}
+  .about-card dd{margin:4px 0 0; color:var(--slate);}
+  .about-body p{margin:0 0 22px; font-size:var(--body-text);}
+  .about-body p:last-child{margin-bottom:0;}
+
+  /* ==========================================================
+     8. EXPERIENCE — ledger-style rows
+     ========================================================== */
+  /* Inner rules use --line-soft so they read as lighter than the
+     full-width section dividers. Change --line-soft in :root to tune. */
+  .ledger{border-top:1px solid var(--line-soft);}
+  .ledger-row{
+    display:grid;
+    grid-template-columns:100px 1fr 140px;   /* code | details | date */
+    gap:20px;
+    padding:var(--row-space) 0;              /* row height dial */
+    border-bottom:1px solid var(--line-soft);
+  }
+  .ledger-row .code{font-family:var(--mono); font-size:13px; color:var(--brass); padding-top:2px;}
+  .ledger-row .role{font-weight:600; color:var(--ink); margin:0 0 4px;}
+  .ledger-row .org{color:var(--slate); font-size:14px; margin:0 0 14px;}
+  .ledger-row .desc{margin:0; color:var(--ink); font-size:var(--body-text); max-width:62ch;}
+  .ledger-row .years{font-family:var(--mono); font-size:13px; color:var(--slate); text-align:right; padding-top:2px;}
+
+  /* ==========================================================
+     9. PROJECTS — record rows
+     To ADD a project: copy one whole <div class="record">...</div>
+     block in the HTML below and change the text inside it.
+     ========================================================== */
+  .records{border-top:1px solid var(--line-soft);}
+  .record{
+    display:grid; grid-template-columns:120px 1fr; gap:clamp(14px, 2.5vw, 28px);
+    padding:var(--row-space) 0;              /* row height dial */
+    border-bottom:1px solid var(--line-soft);
+  }
+  .record .file-no{font-family:var(--mono); font-size:12px; color:var(--slate); padding-top:6px;}
+  .record h3{
+    font-family:var(--serif); font-weight:500; font-size:1.15rem;
+    margin:0 0 12px; color:var(--navy);
+  }
+  .record h3 a{text-decoration:none; color:inherit; border-bottom:1px solid var(--brass-dim);}
+  .record h3 a:hover{color:var(--brass); border-bottom-color:var(--brass);}
+  .record p{margin:0 0 16px; font-size:var(--body-text); max-width:64ch;}
+  .record .stack{font-family:var(--mono); font-size:12px; color:var(--brass); letter-spacing:0.02em;}
+  .record .visit{
+    font-family:var(--mono); font-size:12px; color:var(--slate);
+    text-decoration:none; border-bottom:1px solid var(--line); margin-left:14px;
+  }
+  .record .visit:hover{color:var(--brass); border-bottom-color:var(--brass);}
+
+  /* ==========================================================
+     10. CONTACT
+     ========================================================== */
+  .contact-row{display:flex; flex-wrap:wrap; gap:14px 40px; align-items:center; margin-bottom:28px;}
+  .contact-row a{font-size:1rem;}
+  .resume-btn{
+    display:inline-block; font-family:var(--mono); font-size:13px;
+    color:var(--paper); background:var(--navy); padding:12px 20px;
+    text-decoration:none; border:1px solid var(--navy);
+  }
+  .resume-btn:hover{background:var(--brass); border-color:var(--brass); color:var(--paper);}
+  .contact-note{font-size:13px; color:var(--slate); max-width:56ch;}
+
+  /* ==========================================================
+     11. FOOTER  ← your request #3: bottom space now matches the top
+     Both use the same --edge-space value defined at the very top.
+     ========================================================== */
+  footer{
+    /* Half a gap, matching every other block boundary — the Contact
+       section above supplies the other half. */
+    padding-top:calc(var(--section-gap) / 2);
+    padding-bottom:var(--edge-space);   /* breathing room at the very bottom */
+    font-family:var(--mono); font-size:12px; color:var(--slate);
+    display:flex; align-items:center; gap:12px; flex-wrap:wrap;
+  }
+  footer img{width:26px; height:26px; opacity:0.85;}
+  footer p{margin:0;}
+
+  /* ==========================================================
+     12. SMALL-SCREEN ADJUSTMENTS
+     A @media block means "only apply these rules when the screen
+     is narrower than 720px." Multi-column grids collapse to one
+     column so nothing gets squeezed on a phone.
+     ========================================================== */
+  @media (max-width:720px){
+    .about-grid{grid-template-columns:1fr;}
+    .ledger-row{grid-template-columns:1fr; gap:6px;}
+    .ledger-row .years{text-align:left;}
+    .record{grid-template-columns:1fr; gap:8px;}
+  }
+
+  /* Below 900px the menu button floats over the top-left corner,
+     so the hero needs extra clearance underneath it. This is the one
+     place the top gap is intentionally larger than --section-gap —
+     otherwise the button would overlap the text.
+     This block must stay near the END of the stylesheet: CSS applies
+     the LAST matching rule, so placing it before .hero would have no
+     effect at all. */
+  @media (max-width:899px){
+    .hero{padding-top:calc(var(--section-gap) + 46px);}
+  }
+
+  /* ---- Spacing notes ----
+     Section spacing now comes from the --section-gap token near the
+     top of this stylesheet, so there is no override needed here.
+     To make the WHOLE page airier or tighter, change these three
+     values in the :root block and nothing else:
+        --section-gap  (space between sections)
+        --row-space    (space inside project/experience rows)
+        --head-gap     (space under section titles)
+     The hero is separate and uses --edge-space. */
+
+  /* Every section, including Contact, now uses the same --section-gap
+     so the rhythm is identical throughout. The footer supplies its own
+     space below via --edge-space. */
+
 </style>
 </head>
-<body class="w3-light-grey">
+<body>
 
-<!-- w3-content defines a container for fixed size centered content, 
-and is wrapped around the whole page content, except for the footer in this example -->
-<div class="w3-content">
+<!-- ============ MOBILE MENU BUTTON ============
+     Only visible on screens under 900px wide. -->
+<button class="menu-btn" aria-label="Open menu" aria-expanded="false"><span></span></button>
 
-<!-- Header -->
-<header class="w3-container w3-center w3-padding-32"> 
-  <h1><b>Elliot Li  李正赜</b></h1>
-  <h3>Welcome to my website!</h3>
-</header>
+<!-- Dark screen behind the sidebar on mobile. Tapping it closes the menu. -->
+<div class="overlay"></div>
 
-<!-- Grid -->
-<div class="w3-row">
+<!-- ============ SIDEBAR ============
+     To add a nav item, copy one <li> line and point its href at a
+     section's id (the id="..." on each <section> below). -->
+<aside class="sidebar">
 
-<!-- Blog entries -->
- <div class="w3-col">
-  <!-- Blog entry -->
-  <div class="w3-card-4 w3-margin w3-white">
-    <div class="w3-container">
-      <h3><b>Elliot's Recipe Book</b></h3>
-      <h7><span class="w3-opacity">Sep 2026</span></h7>
+  <a class="sidebar__stamp" href="#top" aria-label="Elliot Li — home">
+    <img src="pics/stamp.png" alt="Elliot Li 李正赜 seal">
+  </a>
+
+  <a class="sidebar__name" href="#top"></a>
+
+  <!-- <a class="sidebar__name" href="#top">
+    Elliot Li
+    <span class="zh">李正赜</span>
+  </a> -->
+
+  <div class="sidebar__label">CONTENTS</div>
+
+  <nav class="side-links">
+    <a href="#about"><span class="num">001</span>About</a>
+    <a href="#projects"><span class="num">002</span>Projects</a>
+    <a href="#experience"><span class="num">003</span>Experience</a>
+    <a href="#personal"><span class="num">004</span>Personal</a>
+  </nav>
+
+  <!-- ============ CONTACT (sidebar) ============
+       This replaces the old Contact section in the main body.
+       The email shows the actual address on purpose: mailto: only opens
+       something if the visitor has a default mail app configured, and
+       many don't — this way they can always read and copy it.
+       The résumé button needs a file named resume.pdf in this folder. -->
+  <div class="sidebar__foot">
+    <div class="sidebar__label">CONTACT</div>
+    <div class="side-contact">
+
+      <!-- Each link is an inline SVG icon plus its label. To go
+           icon-only, delete the text after </svg>; keep aria-label so
+           screen readers still announce what the link is. -->
+
+      <a href="mailto:zl516@georgetown.edu" aria-label="Email">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="4.5" width="19" height="15" rx="1.5"/><path d="M3 6l9 6.5L21 6"/></svg>
+        Email
+      </a>
+
+      <!-- target="_blank" opens in a new tab; rel="noopener" is a security best practice -->
+      <a href="https://www.linkedin.com/in/zhengze-li-90517b193/" target="_blank" rel="noopener" aria-label="LinkedIn">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="2.5" width="19" height="19" rx="2"/><path d="M7 10.5v7M7 7v.01M11.5 17.5v-4a2.5 2.5 0 015 0v4"/><path d="M11.5 10.5v7"/></svg>
+        LinkedIn
+      </a>
+
+      <a href="https://github.com/elliotzli" target="_blank" rel="noopener" aria-label="GitHub">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 19c-4.5 1.5-4.5-2.5-6.5-3M15 21v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 00-1.3-3.2 4.3 4.3 0 00-.1-3.2s-1-.3-3.4 1.3a11.6 11.6 0 00-6.2 0C6.6 2.8 5.6 3.1 5.6 3.1a4.3 4.3 0 00-.1 3.2A4.6 4.6 0 004.2 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg>
+        GitHub
+      </a>
+
+      <a href="https://www.instagram.com/elliotzli10" target="_blank" rel="noopener" aria-label="Instagram">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="2.5" width="19" height="19" rx="5"/><circle cx="12" cy="12" r="4"/><path d="M17.5 6.5v.01"/></svg>
+        Instagram
+      </a>
+
+    </div>
+    <a class="side-resume" href="pics/Resume_2026_Li_Zhengze.pdf">Résumé (PDF)</a>
+  </div>
+
+</aside>
+
+<main id="top">
+
+  <!-- ============ HERO ============ -->
+  <section class="hero wrap">
+    <p class="kicker reveal">RECORD 2000 </p>
+    <h1 class="reveal">Elliot Li</h1>
+    <p class="lede measure reveal"></p>
+    <div class="hero-meta reveal">
+      <span>Washington, DC</span>
+    </div>
+    <div class="hero-meta reveal">
+      <span>M.S. Data Science · B.S. Quantitative Finance</span>
     </div>
 
-    <div class="w3-container">
-      <p>Welcome to my recipe book! Here you will find a collection of my favorite recipes, ranging from classic comfort food to exotic dishes from around the world. Each recipe is carefully crafted and tested to ensure delicious results. Enjoy!</p>
-      <div class="w3-row">
-        <div class="w3-col m8 s12">
-          <p><button class="w3-button w3-padding-large w3-white w3-border"><a href="https://elliotzli.com/elliots_recipe_book.html">Read More</a></button></p>
+  </section>
+
+  <!-- ============ PHOTO BAND (currently hidden) ============
+       To bring the photo back, delete the comment opener on the line
+       above and the closer on the line below, leaving just the <img>.
+       Change the src to swap the photo; keep the file in this folder.
+
+  <img class="banner" src="lighthouse.jpg" alt="Lighthouse at dusk">
+
+       ======================================================== -->
+
+  <!-- ============ ABOUT ============ -->
+  <section id="about" class="wrap">
+    <div class="section-head">
+      <h2>About</h2>
+      <span class="tag">RECORD 001</span>
+    </div>
+    <div class="about-grid">
+
+      <!-- Left box: quick facts. dt = the label, dd = the value. -->
+      <div class="about-card">
+        <dl>
+          <dt>Role</dt>
+          <dd>Systems &amp; Data Analyst</dd>
+          <dt>Office</dt>
+          <dd>Georgetown Law </dd>
+          <dt>Skills</dt>
+          <dd>Python · R · SQL · Cognos · Data Vis</dd>
+          <dt>Hobbies</dt>
+          <dd>Fashion · Investing · Film</dd>
+          <dt>Languages</dt>
+          <dd>English · Chinese</dd>
+
+
+
+
+        </dl>
+      </div>
+
+      <!-- Right side: your bio paragraphs -->
+      <div class="about-body measure">
+        <p>
+          This site is where I keep the things I've made — research projects on one side, personal whimsy on the other.
+        </p>
+        <p>
+          By day I keep a law school's records systems in
+          order: I'm a Systems and Data Analyst at Georgetown Law, which mostly
+          means crunching Excel sheets and writing Python scripts that turn messy operational and financial workflows
+          into something tidy and automated. I like work that has to be exactly right.
+        </p>
+        <p>
+          Outside of that I collect vintage pieces and read more fashion analysis than is probably reasonable — how a silhouette gets invented, argued over, and revived interests me as much as the clothes themselves.
+          Film pulls at the same thread. I'll happily lose an evening to why a director put the camera exactly there, and what the shot is quietly saying that the dialogue isn't.
+          I'm learning to DJ, which so far is mostly failed beat matching in my apartment.
+          And I think in both English and Chinese, usually switching to whichever one has the better word.
+          I follow markets closely enough thanks to both my finance and data science degree which give me a solid foundation in understanding market dynamics.
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ============ PROJECTS ============
+       Each project is one <div class="record"> block:
+         .file-no = the date on the left
+         <h3>     = the title (wrap in <a href="..."> to make it a link)
+         <p>      = the description
+         .stack   = the small brass tech-tags line
+         .visit   = the "Read more" link
+       Copy a whole block to add a project. Delete one to remove it. -->
+  <section id="projects" class="wrap">
+    <div class="section-head">
+      <h2>Projects</h2>
+      <span class="tag">RECORD 002</span>
+    </div>
+    <div class="records">
+
+      <div class="record">
+        <span class="file-no">DEC 2023</span>
+        <div>
+          <h3><a href="https://elliotzli.com/dsan5600-project-site/">Fed Funds Rate Impact Study</a></h3>
+          <p>
+            An investigation into how fluctuations in the Fed Funds Rate ripple across
+            the economy — the bond market, equities, exchange rates, inflation, and
+            unemployment — to surface the broader dynamics behind rate policy.
+          </p>
+          <span class="stack">time series · R · Quarto</span>
+          <!-- <a class="visit" href="https://elliotzli.com/dsan5600-project-site/">Read more</a> -->
         </div>
       </div>
-    </div>
-  </div>
-</div>
 
-<div class="w3-col">
-  <!-- Blog entry -->
-  <div class="w3-card-4 w3-margin w3-white">
-    <div class="w3-container">
-      <h3><b>Fed Funds Rate Impact Study</b></h3>
-      <h7><span class="w3-opacity">May 2024</span></h7>
-    </div>
-
-    <div class="w3-container">
-      <p>This project seeks to investigate the potential effects of fluctuations in the Fed Funds Rate on various sectors of the economy. Specifically, it aims to analyze the impact on key sectors such as the bond market, stock market, exchange rates, inflation rates, and unemployment rates. By examining these relationships, we can gain valuable insights into the broader economic dynamics influenced by changes in the Fed Funds Rate.</p>
-      <div class="w3-row">
-        <div class="w3-col m8 s12">
-          <p><button class="w3-button w3-padding-large w3-white w3-border"><a href="https://elliotzli.com/dsan5600-project-site/">Read More</a></button></p>
+      <div class="record">
+        <span class="file-no">SEP 2023</span>
+        <div>
+          <h3><a href="https://elliotzli.com/fall-2023-reddit-project-team-35/">Reddit Big Data Analysis on Taylor Swift</a></h3>
+          <p>
+            A big-data look at how a celebrity's popularity lives outside of streaming:
+            what fans actually discuss, how communities differ across platforms, and
+            which topics drive engagement.
+          </p>
+          <span class="stack">spark · nlp · big data · cloud computing</span>
+          <!-- <a class="visit" href="https://elliotzli.com/fall-2023-reddit-project-team-35/">Read more</a> -->
         </div>
       </div>
-    </div>
-  </div>
-</div>
 
-<div class="w3-col">
-  <!-- Blog entry -->
-  <div class="w3-card-4 w3-margin w3-white">
-    <div class="w3-container">
-      <h3><b>How are H2 Visa holders impacting the US economy?</b></h3>
-      <h7><span class="w3-opacity">April 2023</span></h7>
-    </div>
-
-    <div class="w3-container">
-      <p>The impact of foreign workers holding working visas on the local economy is a subject of great interest and controversy. With the global economy relying on international trade, an increasing number of companies are employing foreign workers to fill positions, resulting in an inflow of working visa holders into numerous countries. While some proponents argue that these workers bring valuable skills and make significant contributions to the economy, others contend that they displace local workers and strain public services. This raises essential questions about the effects of working visa holders on the local economy and the wider social and political ramifications of international labor migration.</p>
-      <div class="w3-row">
-        <div class="w3-col m8 s12">
-          <p><button class="w3-button w3-padding-large w3-white w3-border"><a href="https://elliotzli.com/spring2023-project-team-28/">Read More</a></button></p>
+      <div class="record">
+        <span class="file-no">APR 2023</span>
+        <div>
+          <h3><a href="https://elliotzli.com/spring2023-project-team-28/">How Are H-2 Visa Holders Impacting the US Economy?</a></h3>
+          <p>
+            An examination of the debate around working-visa holders in the local
+            economy and what the data actually shows, whether they fill skill gaps and contribute, or displace local
+            workers, and strain public services.
+          </p>
+          <span class="stack">python · data viz · Quarto</span>
+          <!-- <a class="visit" href="https://elliotzli.com/spring2023-project-team-28/">Read more</a> -->
         </div>
       </div>
-    </div>
-  </div>
-</div>
 
-<div class="w3-col">
-  <!-- Blog entry -->
-  <div class="w3-card-4 w3-margin w3-white">
-    <div class="w3-container">
-      <h3><b>Reddit Big Data Analysis on Taylor Swift</b></h3>
-      <h7><span class="w3-opacity">December 2023</span></h7>
-    </div>
-
-    <div class="w3-container">
-      <p>Taylor Swift is undoubtedly successful. People may be curious about: “How popular is Taylor Swift outside of music streaming software?”, “What makes her so popular?”, “Will the fans be different between different websites or different applications?”. By addressing these questions, we can learn the composition of fans, the topics that fans like to discuss most, etc. These analysis outcomes can be utilized to identify the trending topics related to a celebrity, to enhance the popularity; or to change the personal style to cater to more people. All in all, it can generate huge profits in the future.</p>
-      <div class="w3-row">
-        <div class="w3-col m8 s12">
-          <p><button class="w3-button w3-padding-large w3-white w3-border"><a href="https://elliotzli.com/fall-2023-reddit-project-team-35/">Read More</a></button></p>
+      <div class="record">
+        <span class="file-no">ONGOING</span>
+        <div>
+          <h3>Independent Investment Research</h3>
+          <p>
+            Equity research across tech, semiconductors, and defense — building and
+            revising theses, tracking earnings and catalysts, and testing range-based
+            trading strategies.
+          </p>
+          <span class="stack">equities · sector analysis</span>
         </div>
       </div>
-    </div>
-  </div>
-</div>
-<!-- END BLOG ENTRIES -->
-</div>
 
-</div>
-</div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ============ EXPERIENCE ============
+       Each row: .code (left tag) | role/org/desc (middle) | .years (right) -->
+  <section id="experience" class="wrap">
+    <div class="section-head">
+      <h2>Experience</h2>
+      <span class="tag">RECORD 003</span>
+    </div>
+    <div class="ledger">
+
+      <div class="ledger-row">
+        <span class="code">WORK</span>
+        <div>
+          <p class="role">Systems &amp; Data Analyst</p>
+          <p class="org">Georgetown Law</p>
+          <p class="desc">
+            Institutional data reporting, Banner administration, and Python/Excel
+            workflows for administrative processes.
+          </p>
+        </div>
+        <span class="years">Current</span>
+      </div>
+
+      <div class="ledger-row">
+        <span class="code">PART-TIME</span>
+        <div>
+          <p class="role">Business Intelligence Engineer</p>
+          <p class="org">Georgetown McDonough School of Business</p>
+          <p class="desc">
+            Data infrastructure for the MBA career center: an employer record database,
+            a career search system linking student demographics to employer history, 
+            and benchmarking research across the top MBA programs.
+          </p>
+        </div>
+        <span class="years">Prior</span>
+      </div>
+
+      <div class="ledger-row">
+        <span class="code">INTERN</span>
+        <div>
+          <p class="role">Equity Research Analyst</p>
+          <p class="org">GUOTAI JUNAN SECURITIES</p>
+          <p class="desc">
+            Transportation sector coverage for institutional clients, including
+            earnings forecasts, valuation work, and the annual report on
+            modeling transport emissions under China's carbon neutrality push.
+          </p>
+
+          <span class="stack">
+          <a class="visit" href="https://www.fxbaogao.com/detail/2713056" target="_blank">Read more</a></span>
+          </div>
+        <!-- </div> -->
+        <span class="years">Prior</span>
+      </div>
+
+      <div class="ledger-row">
+        <span class="code">EDU</span>
+        <div>
+          <p class="role">M.S., Data Science &amp; Analytics</p>
+          <p class="org">Georgetown University</p>
+        </div>
+        <span class="years">Completed</span>
+      </div>
+
+      <div class="ledger-row">
+        <span class="code">EDU</span>
+        <div>
+          <p class="role">B.S., Quantitative Finance</p>
+          <p class="org">University of Connecticut</p>
+        </div>
+        <span class="years">Completed</span>
+      </div>
+
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ============ PERSONAL ============
+       Things I make outside of work. Same .record structure as Projects,
+       so you can copy a block from either section into the other. -->
+  <section id="personal" class="wrap">
+    <div class="section-head">
+      <h2>Personal</h2>
+      <span class="tag">RECORD 004</span>
+    </div>
+    <div class="records">
+
+      <div class="record">
+        <span class="file-no">SEP 2026</span>
+        <div>
+          <h3><a href="https://elliotzli.com/elliots_recipe_book.html">Elliot&rsquo;s Recipe Book</a></h3>
+          <p>
+            The dishes I actually cook, written up in English and Chinese —
+            Sichuan and Wuhan staples, a few Thai recipes I&rsquo;m still
+            adjusting, and whatever else has earned a permanent place in
+            the rotation.
+          </p>
+          <span class="stack">cooking · 中文 &amp; english</span>
+          <!-- <a class="visit" href="https://elliotzli.com/elliots_recipe_book.html">Read more</a> -->
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============ CONTACT SECTION (moved to the sidebar) ============
+       This whole block is switched off — contact now lives at the bottom
+       of the sidebar. To put it back in the main body, delete the comment
+       opener above and the closer at the end of this block, then add a
+       Contact link back into the CONTENTS nav in the sidebar.
+
+  <hr class="divider">
+
+  <section id="contact" class="wrap">
+    <div class="section-head">
+      <h2>Contact</h2>
+      <span class="tag">RECORD 004</span>
+    </div>
+    <div class="contact-row">
+      <a href="mailto:zl516@georgetown.edu">zl516@georgetown.edu</a>
+      <a href="https://www.linkedin.com/in/zhengze-li-90517b193/" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://github.com/elliotzli" target="_blank" rel="noopener">GitHub</a>
+    </div>
+    <a class="resume-btn" href="resume.pdf">Download resume (PDF)</a>
+  </section>
+
+       ============================================================ -->
+
+</main>
+
+<hr class="divider">
+
+<!-- ============ FOOTER ============
+     To hide the footer, wrap it in ONE comment: an opener before
+     <footer and a closer after </footer>. Never put a comment
+     inside another comment — HTML ends a comment at the first
+     closer it finds, so the rest of your markup leaks back onto
+     the page and things break in confusing ways. -->
+<footer class="wrap">
+  <img src="pics/stamp.png" alt="">
+  <p>© <span id="year"></span> 李正赜</p>
+</footer>
+
+<!-- ============ SCRIPTS ============ -->
+<script>
+  /* --- 1. Current year in the footer ---
+     The "if" guard means the page won't error if you remove the footer. */
+  var yearEl = document.getElementById('year');
+  if (yearEl) { yearEl.textContent = new Date().getFullYear(); }
+
+  /* --- 2. Mobile menu open/close ---
+     Adding the class "menu-open" to <body> is what slides the sidebar
+     in; the CSS rule body.menu-open .sidebar does the actual moving. */
+  var menuBtn = document.querySelector('.menu-btn');
+  var overlay = document.querySelector('.overlay');
+
+  function closeMenu(){
+    document.body.classList.remove('menu-open');
+    if (menuBtn) menuBtn.setAttribute('aria-expanded','false');
+  }
+  if (menuBtn) {
+    menuBtn.addEventListener('click', function(){
+      var open = document.body.classList.toggle('menu-open');
+      menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+  }
+  if (overlay) overlay.addEventListener('click', closeMenu);
+
+  /* Close the menu after tapping a link, so you can see the section */
+  document.querySelectorAll('.side-links a, .sidebar__stamp, .sidebar__name')
+    .forEach(function(link){ link.addEventListener('click', closeMenu); });
+
+  /* Close on the Escape key */
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape') closeMenu();
+  });
+
+  /* --- 3. Highlight the sidebar link for whatever section you're viewing ---
+     IntersectionObserver watches each section and reports when it
+     enters the middle band of the screen. Delete this whole block if
+     you'd rather the links never highlight. */
+  var navLinks = document.querySelectorAll('.side-links a');
+  var sections = document.querySelectorAll('main section[id]');
+
+  if ('IntersectionObserver' in window && sections.length) {
+    var spy = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if (!entry.isIntersecting) return;
+        navLinks.forEach(function(link){
+          link.classList.toggle(
+            'active',
+            link.getAttribute('href') === '#' + entry.target.id
+          );
+        });
+      });
+    }, { rootMargin: '-45% 0px -50% 0px' });
+
+    sections.forEach(function(sec){ spy.observe(sec); });
+  }
+</script>
 
 </body>
 </html>
