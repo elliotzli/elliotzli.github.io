@@ -116,6 +116,19 @@
        The small labels (file numbers, tech tags, dates) stay at 12–13px
        and are set individually, so this dial won't shrink them. */
     --body-text:0.88rem;
+
+    /* ---- ROW ALIGNMENT ----
+       Projects, Experience and Personal all use a left label column
+       (dates, REG-401 codes) followed by the content. These two values
+       are shared by ALL of them, so titles and body text start at the
+       same x-position in every section.
+       If you change one, every section moves together. */
+    --label-col:120px;   /* width of the left label column */
+    --label-gap:24px;    /* space between that column and the content */
+
+    /* Size of the row titles — project names and job titles.
+       Projects, Experience and Personal all share it. */
+    --row-title:1.15rem;
   }
 
   /* Makes padding count INSIDE an element's width instead of adding to it.
@@ -488,14 +501,27 @@
   .ledger{border-top:1px solid var(--line-soft);}
   .ledger-row{
     display:grid;
-    grid-template-columns:100px 1fr 140px;   /* code | details | date */
-    gap:20px;
+    /* code | details | date — the first column and gap match .record
+       exactly so Experience lines up with Projects and Personal. */
+    grid-template-columns:var(--label-col) 1fr 140px;
+    gap:var(--label-gap);
     padding:var(--row-space) 0;              /* row height dial */
     border-bottom:1px solid var(--line-soft);
   }
   .ledger-row .code{font-family:var(--mono); font-size:13px; color:var(--brass); padding-top:2px;}
-  .ledger-row .role{font-weight:600; color:var(--ink); margin:0 0 4px;}
-  .ledger-row .org{color:var(--slate); font-size:14px; margin:0 0 14px;}
+  /* Job titles. Same weight, color and size as the project titles in
+     Projects and Personal — see .record h3 below. Change --row-title
+     to resize all three sections at once. */
+  .ledger-row .role{
+    font-weight:600; color:var(--ink);
+    font-size:var(--row-title);
+    line-height:1.3;
+    margin:0 0 6px;
+  }
+  /* Institution / employer line. Uses --ink like the rest of the body
+     text, not the muted --slate, so it reads at the same weight of
+     attention as everything else. */
+  .ledger-row .org{color:var(--ink); font-size:14px; margin:0 0 14px;}
   .ledger-row .desc{margin:0; color:var(--ink); font-size:var(--body-text); max-width:62ch;}
   .ledger-row .years{font-family:var(--mono); font-size:13px; color:var(--slate); text-align:right; padding-top:2px;}
 
@@ -506,14 +532,20 @@
      ========================================================== */
   .records{border-top:1px solid var(--line-soft);}
   .record{
-    display:grid; grid-template-columns:120px 1fr; gap:clamp(14px, 2.5vw, 28px);
+    display:grid;
+    grid-template-columns:var(--label-col) 1fr;
+    gap:var(--label-gap);
     padding:var(--row-space) 0;              /* row height dial */
     border-bottom:1px solid var(--line-soft);
   }
   .record .file-no{font-family:var(--mono); font-size:12px; color:var(--slate); padding-top:6px;}
+  /* Project titles. Matched to .ledger-row .role above: same weight,
+     same --ink color, same --row-title size. */
   .record h3{
-    font-family:var(--serif); font-weight:500; font-size:1.15rem;
-    margin:0 0 12px; color:var(--navy);
+    font-weight:600; color:var(--ink);
+    font-size:var(--row-title);
+    line-height:1.3;
+    margin:0 0 12px;
   }
   .record h3 a{text-decoration:none; color:inherit; border-bottom:1px solid var(--brass-dim);}
   .record h3 a:hover{color:var(--brass); border-bottom-color:var(--brass);}
@@ -622,9 +654,10 @@
 
   <nav class="side-links">
     <a href="#about"><span class="num">001</span>About</a>
-    <a href="#projects"><span class="num">002</span>Projects</a>
-    <a href="#experience"><span class="num">003</span>Experience</a>
-    <a href="#personal"><span class="num">004</span>Personal</a>
+    <a href="#education"><span class="num">002</span>Education</a>
+    <a href="#projects"><span class="num">003</span>Projects</a>
+    <a href="#experience"><span class="num">004</span>Experience</a>
+    <a href="#personal"><span class="num">005</span>Personal</a>
   </nav>
 
   <!-- ============ CONTACT (sidebar) ============
@@ -679,7 +712,7 @@
       <span>Washington, DC</span>
     </div>
     <div class="hero-meta reveal">
-      <span>M.S. Data Science · B.S. Quantitative Finance</span>
+      <span>M.S. Data Science · B.S. Finance</span>
     </div>
 
   </section>
@@ -746,6 +779,39 @@
 
   <hr class="divider">
 
+  <!-- ============ EDUCATION ============
+       Same .ledger structure as Experience, so rows can be moved
+       between the two sections by copy and paste. -->
+  <section id="education" class="wrap">
+    <div class="section-head">
+      <h2>Education</h2>
+      <span class="tag">RECORD 002</span>
+    </div>
+    <div class="ledger">
+
+      <div class="ledger-row">
+        <span class="code">WASHINGTON, DC</span>
+        <div>
+          <p class="role">M.S., Data Science &amp; Analytics</p>
+          <p class="org">Georgetown University</p>
+        </div>
+        <span class="years">May 2024</span>
+      </div>
+
+      <div class="ledger-row">
+        <span class="code">STORRS, CT</span>
+        <div>
+          <p class="role">B.S., Finance</p>
+          <p class="org">University of Connecticut</p>
+        </div>
+        <span class="years">May 2022</span>
+      </div>
+
+    </div>
+  </section>
+
+  <hr class="divider">
+
   <!-- ============ PROJECTS ============
        Each project is one <div class="record"> block:
          .file-no = the date on the left
@@ -757,7 +823,7 @@
   <section id="projects" class="wrap">
     <div class="section-head">
       <h2>Projects</h2>
-      <span class="tag">RECORD 002</span>
+      <span class="tag">RECORD 003</span>
     </div>
     <div class="records">
 
@@ -766,9 +832,9 @@
         <div>
           <h3><a href="https://elliotzli.com/dsan5600-project-site/">Fed Funds Rate Impact Study</a></h3>
           <p>
-            An investigation into how fluctuations in the Fed Funds Rate ripple across
-            the economy — the bond market, equities, exchange rates, inflation, and
-            unemployment — to surface the broader dynamics behind rate policy.
+            An investigation to surface the broader dynamics behind rate policy and how fluctuations in the Fed Funds Rate ripple across
+            various sectors of the economy: the bond market, equities, exchange rates, inflation, and
+            unemployment.
           </p>
           <span class="stack">time series · R · Quarto</span>
           <!-- <a class="visit" href="https://elliotzli.com/dsan5600-project-site/">Read more</a> -->
@@ -808,8 +874,8 @@
         <div>
           <h3>Independent Investment Research</h3>
           <p>
-            Equity research across tech, semiconductors, and defense — building and
-            revising theses, tracking earnings and catalysts, and testing range-based
+            Equity research across tech, semiconductors, software, and defense — building and
+            and revising theses, tracking earnings and catalysts, and testing range-based
             trading strategies.
           </p>
           <span class="stack">equities · sector analysis</span>
@@ -826,7 +892,7 @@
   <section id="experience" class="wrap">
     <div class="section-head">
       <h2>Experience</h2>
-      <span class="tag">RECORD 003</span>
+      <span class="tag">RECORD 004</span>
     </div>
     <div class="ledger">
 
@@ -836,8 +902,11 @@
           <p class="role">Systems &amp; Data Analyst</p>
           <p class="org">Georgetown Law</p>
           <p class="desc">
-            Institutional data reporting, Banner administration, and Python/Excel
-            workflows for administrative processes.
+            Institutional reporting and process automation for the law school: 
+            Cognos analysis across graduation tracking, registration trends, financial aid compliance, 
+            and bar exam enrollment; Python automating delivery, reporting, and permissions for
+            the school&rsquo;s examination system without breaking grading anonymity; and Banner release testing plus dashboards 
+            that surface where processes stall.
           </p>
         </div>
         <span class="years">Current</span>
@@ -875,24 +944,6 @@
         <span class="years">Prior</span>
       </div>
 
-      <div class="ledger-row">
-        <span class="code">EDU</span>
-        <div>
-          <p class="role">M.S., Data Science &amp; Analytics</p>
-          <p class="org">Georgetown University</p>
-        </div>
-        <span class="years">Completed</span>
-      </div>
-
-      <div class="ledger-row">
-        <span class="code">EDU</span>
-        <div>
-          <p class="role">B.S., Quantitative Finance</p>
-          <p class="org">University of Connecticut</p>
-        </div>
-        <span class="years">Completed</span>
-      </div>
-
     </div>
   </section>
 
@@ -904,7 +955,7 @@
   <section id="personal" class="wrap">
     <div class="section-head">
       <h2>Personal</h2>
-      <span class="tag">RECORD 004</span>
+      <span class="tag">RECORD 005</span>
     </div>
     <div class="records">
 
@@ -913,13 +964,12 @@
         <div>
           <h3><a href="https://elliotzli.com/elliotsrecipebook.html">Elliot&rsquo;s Recipe Book</a></h3>
           <p>
-            The dishes I actually cook, written up in English and Chinese —
-            Sichuan and Wuhan staples, a few Thai recipes I&rsquo;m still
-            adjusting, and whatever else has earned a permanent place in
-            the rotation.
+            The dishes I actually cook, written up in English and Chinese:
+            Sichuan and Wuhan staples, a few Thai recipes I&rsquo;m still adjusting,
+            and whatever else has earned a permanent place in the rotation.
           </p>
-          <span class="stack">cooking · 中文 &amp; english</span>
-          <!-- <a class="visit" href="https://elliotzli.com/elliots_recipe_book.html">Read more</a> -->
+          <!--<span class="stack">cooking · 中文 &amp; english</span>
+           <a class="visit" href="https://elliotzli.com/elliots_recipe_book.html">Read more</a> -->
         </div>
       </div>
 
